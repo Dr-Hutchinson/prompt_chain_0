@@ -35,7 +35,8 @@ def button_one():
     if submit_button_1:
 
         ### OpenAI API code - obain a key and account here.###
-        os.environ["OPENAI_API_KEY"] = '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'
+        os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
+        #os.environ["OPENAI_API_KEY"] = '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'
 
         ### Begin GPT-3 text embedding search. Code and explanation for GPT-3 embeddgins found here: ###
         datafile_path = "./more_index_embeddings.csv"  # for your convenience, we precomputed the embeddings
