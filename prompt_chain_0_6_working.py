@@ -288,7 +288,6 @@ def button_one():
                 # Extract the values from the dictionary using a list comprehension
                 output_values = [d['output'] for d in output_dict]
 
-                st.write("Step 3 - initial anaylsis completed. One final step remaining.")
                 # Print the output values to see the results
                 #st.write(output_values)
 
@@ -352,6 +351,7 @@ def button_one():
                 final_analysis_df = pd.DataFrame({'output_values': output_values, 'final_analysis': final_analysis_results})
                 #final_analysis_df.to_csv('final_analysis.csv', index=False)
 
+                st.write("Step 3 - initial anaylsis completed. One final step remaining.")
                 # Save the dataframe to a CSV file
 
                 # final answer prompt, version 0 - includes biographical, context, and final answer with supporting quote.
@@ -423,7 +423,7 @@ def button_one():
 
                 # Create the final_outputs_df dataframe using the updated lists
                 final_outputs_df = pd.DataFrame({'output_values': output_values, 'final_analysis': final_analysis, 'final_output_results': final_output_results})
-                st.write("Step 3 completed, GPT'3 analysis complete.")
+                st.write("Step 4 completed, GPT'3 analysis is complete.")
                 st.dataframe(final_outputs_df)
                 # Save the dataframe to a CSV file
                 #final_outputs_df.to_csv('final_outputs.csv', index=False)
