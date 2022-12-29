@@ -464,8 +464,8 @@ def button_one():
 
                     initial_output_collection()
 
-            st.header("Below is GPT-3's chain-of-thought process for generating these respones.")
-            st.dataframe(final_outputs_df)
+                st.header("Below is GPT-3's chain-of-thought process for generating these respones.")
+                st.dataframe(final_outputs_df)
 
 def button_two():
     #Rank Bacon_bot Responses
