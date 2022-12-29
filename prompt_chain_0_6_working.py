@@ -449,8 +449,8 @@ def button_one():
                     section = row['relevant_texts']
                     st.write(section)
                     #st.write(row['initial_analysis'])
-                    analysis = row['final_analysis']
-                    st.markdown("Biographical Identification: \n\n" + analysis)
+                    analysis = "Biographical Identification " + row['final_analysis']
+                    st.markdown(analysis)
 
                     def initial_output_collection():
                         now = dt.now()
