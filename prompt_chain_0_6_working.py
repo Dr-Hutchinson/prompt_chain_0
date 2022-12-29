@@ -172,7 +172,7 @@ def button_one():
             similarity3 = results_df.iloc[2]["similarities"]
             combined3 = results_df.iloc[2]["combined"]
 
-            st.write("Step 1 complete - identified relevant text sections.")
+            st.write("Step 1 complete - identified the most semantically similar text sections.")
                 # Write the DataFrame to a CSV file
             #results_df.to_csv('results_df.csv', index=False, columns=["similarities", "combined"])
                 #end code
@@ -422,7 +422,7 @@ def button_one():
                     #print(final_output)
 
                 # Create the final_outputs_df dataframe using the updated lists
-                final_outputs_df = pd.DataFrame({'relevant_texts': relevant_texts, 'initial_analysis': initial_analysis, 'final_analysis': final_analysis})
+                final_outputs_df = pd.DataFrame({'relevant_texts': relevant_texts, 'relevance_check': relevance_df, 'initial_analysis': initial_analysis, 'final_analysis': final_analysis})
                 st.write("Step 4 completed - GPT'3 analysis is complete.")
 
                 # Save the dataframe to a CSV file
