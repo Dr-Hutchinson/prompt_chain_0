@@ -122,6 +122,8 @@ def button_one():
         if search_method == semantic_search:
             embeddings_search()
         else:
+            st.header("GPT-3's analysis is underway. It can take a minute or two for every step of the process to be completed. GPT-3's progress will be documented below.")
+
                             ### embeddings search
                 #begin code
 
@@ -171,7 +173,7 @@ def button_one():
             combined3 = results_df.iloc[2]["combined"]
 
                 # Write the DataFrame to a CSV file
-            results_df.to_csv('results_df.csv', index=False, columns=["similarities", "combined"])
+            #results_df.to_csv('results_df.csv', index=False, columns=["similarities", "combined"])
                 #end code
 
                 ### few_shot examples for text relevance prompt
@@ -225,7 +227,7 @@ def button_one():
 
             ####combinesfunction for combining sections + outputs, and then filtering via regex for relevant sections
 
-
+            st.write("Step 1: Relevancy check completed.")
 
 
             # combined function for combining sections + outputs, and then filtering via regex for relevant sections
@@ -438,13 +440,14 @@ def button_one():
 
                   # Create an expander for the current row, with the label set to the row number
                   with st.expander(label="Answer " + str(i) + ":", expanded=True):
-                    # Display each cell in the row as a separate block of text
                     st.markdown("**Question:**")
                     st.write(submission_text)
                     st.markdown("**Below is GPT-3's analysis of a section of More's text that it found relevant to your qustion.**")
-                    st.write(row['output_values'])
+                    section = row['output_values']
+                    st.write(section)
                     #st.write(row['final_analysis'])
-                    st.markdown("Biographical Identification: \n\n" + row['final_output_results'])
+                    analysis = row['final_output_results']
+                    st.markdown("Biographical Identification: \n\n" + analysis)
 
                     def initial_output_collection():
                         now = dt.now()
