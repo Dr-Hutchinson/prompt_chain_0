@@ -115,7 +115,7 @@ def button_one():
                 st.write(row['similarities'])
                 st.write(row['combined'])
 
-                #st.write(row['final_analysis'])
+                #st.write(row['initial_analysis'])
                 #st.markdown("Biographical Identification: \n\n" + row['final_output_results'])
 
 
@@ -337,19 +337,19 @@ def button_one():
                 llm = OpenAI(model_name="text-davinci-003", max_tokens = 750, temperature=0.0)
                 chain = LLMChain(llm=llm, prompt=prompt_from_string_examples)
 
-                # Create an empty list to store the final_analysis results
-                final_analysis_results = []
+                # Create an empty list to store the initial_analysis results
+                initial_analysis_results = []
 
                 # Iterate over the relevant_texts list
                 for output_value in relevant_texts:
-                    # Run the final_analysis step and store the result in a variable
-                    final_analysis = chain.run(submission_text+output_value)
-                    # Add the final_analysis result to the list
-                    final_analysis_results.append(final_analysis)
+                    # Run the initial_analysis step and store the result in a variable
+                    initial_analysis = chain.run(submission_text+output_value)
+                    # Add the initial_analysis result to the list
+                    initial_analysis_results.append(initial_analysis)
 
                 # Create a Pandas dataframe from the relevant_texts list
-                final_analysis_df = pd.DataFrame({'relevant_texts': relevant_texts, 'final_analysis': final_analysis_results})
-                #final_analysis_df.to_csv('final_analysis.csv', index=False)
+                initial_analysis_df = pd.DataFrame({'relevant_texts': relevant_texts, 'initial_analysis': initial_analysis_results})
+                #initial_analysis_df.to_csv('initial_analysis.csv', index=False)
 
                 st.write("Step 3 complete - initial anaylsis finished. One final step remaining.")
                 # Save the dataframe to a CSV file
@@ -400,30 +400,30 @@ def button_one():
 
 
 
-                # Load the final_analysis dataframe from the CSV file
-                df = final_analysis_df
+                # Load the initial_analysis dataframe from the CSV file
+                df = initial_analysis_df
                 final_output_results = []
                 relevant_texts = []
-                final_analysis = []
+                initial_analysis = []
 
                 # Iterate over the rows of the dataframe
                 for index, row in df.iterrows():
-                    # Get the values for the relevant_texts and final_analysis columns for this row
+                    # Get the values for the relevant_texts and initial_analysis columns for this row
                     output_value = row['relevant_texts']
-                    analysis = row['final_analysis']
+                    analysis = row['initial_analysis']
 
                     # Add the values to the lists
                     relevant_texts.append(output_value)
-                    final_analysis.append(analysis)
+                    initial_analysis.append(analysis)
 
-                    # Run the final_analysis step using the values from the dataframe
+                    # Run the initial_analysis step using the values from the dataframe
                     final_output = chain.run(submission_text+output_value+analysis)
                     final_output_results.append(final_output)
                     #print(final_output)
 
                 # Create the final_outputs_df dataframe using the updated lists
-                final_outputs_df = pd.DataFrame({'relevant_texts': relevant_texts, 'final_analysis': final_analysis, 'final_output_results': final_output_results})
-                st.write("Step 4 completed, GPT'3 analysis is complete.")
+                final_outputs_df = pd.DataFrame({'relevant_texts': relevant_texts, 'initial_analysis': initial_analysis, 'final_output_results': final_output_results})
+                st.write("Step 4 completed - GPT'3 analysis is complete.")
 
                 # Save the dataframe to a CSV file
                 #final_outputs_df.to_csv('final_outputs.csv', index=False)
@@ -448,7 +448,7 @@ def button_one():
                     st.markdown("**Below is GPT-3's analysis of a section of More's text that it found relevant to your qustion.**")
                     section = row['relevant_texts']
                     st.write(section)
-                    #st.write(row['final_analysis'])
+                    #st.write(row['initial_analysis'])
                     analysis = row['final_output_results']
                     st.markdown("Biographical Identification: \n\n" + analysis)
 
@@ -480,7 +480,7 @@ def button_two():
         st.subheader('Your Question')
         st.write(submission_text)
         st.subheader("The AI's Answer:")
-        st.write(final_analysis)
+        st.write(initial_analysis)
         st.subheader("The AI's Interpretation:")
 
         with st.form('form2'):
@@ -497,7 +497,7 @@ def button_two():
                 df = wks1.get_as_df(has_header=True, index_column=None, start='A1', end=('K2'), numerize=False)
                 name = df['user'][0]
                 submission_text = df['question'][0]
-                output = df['final_analysis'][0]
+                output = df['initial_analysis'][0]
                 combined_df = df['combined_df'][0]
                 relevant_texts = df['evidence'][0]
                 now = dt.now()
@@ -505,7 +505,7 @@ def button_two():
                 ranking_average = mean(ranking_score)
 
                 def ranking_collection():
-                    d4 = {'user':["0"], 'user_id':[user_id],'question':[submission_text], 'output':[final_analysis], 'accuracy_score':[accuracy_score], 'text_score':[text_score],'interpretation_score':[interpretation_score], 'coherence':[coherence_rank], 'overall_ranking':[ranking_average], 'date':[now]}
+                    d4 = {'user':["0"], 'user_id':[user_id],'question':[submission_text], 'output':[initial_analysis], 'accuracy_score':[accuracy_score], 'text_score':[text_score],'interpretation_score':[interpretation_score], 'coherence':[coherence_rank], 'overall_ranking':[ranking_average], 'date':[now]}
                     df4 = pd.DataFrame(data=d4, index=None)
                     sh4 = gc.open('AAS_rankings')
                     wks4 = sh4[0]
