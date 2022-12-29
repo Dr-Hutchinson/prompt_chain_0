@@ -262,7 +262,7 @@ def button_one():
                 # Check if there are any rows in the relevant_df dataframe
             if relevant_df.empty:
                 # If there are no rows, print the desired message
-                st.header("GPT-3 determined that none of the selected text sections are relevant to your question. Here is GPT-3's analysis of those sections.")
+                st.header("GPT-3 determined that none of the selected text sections are relevant to your question. Here is GPT-3's1f analysis of those sections.")
                 st.dataframe(combined_df)
             else:
                 # Otherwise, continue with the rest of the script
@@ -288,7 +288,7 @@ def button_one():
                 # Extract the values from the dictionary using a list comprehension
                 output_values = [d['output'] for d in output_dict]
 
-                st.write("Step 2: Initial anaylsis completed. One final step remaining.")
+                st.write("Step 3 - initial anaylsis completed. One final step remaining.")
                 # Print the output values to see the results
                 #st.write(output_values)
 
