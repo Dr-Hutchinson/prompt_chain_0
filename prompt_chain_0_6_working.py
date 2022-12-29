@@ -262,7 +262,7 @@ def button_one():
                 # Check if there are any rows in the relevant_df dataframe
             if relevant_df.empty:
                 # If there are no rows, print the desired message
-                st.header("GPT-3 determined that none of the selected text sections are relevant to your question. Here is GPT-3's1f analysis of those sections.")
+                st.header("GPT-3 determined that none of the selected text sections are relevant to your question. Here is GPT-3's analysis of those sections.")
                 st.dataframe(combined_df)
             else:
                 # Otherwise, continue with the rest of the script
@@ -534,9 +534,9 @@ with col2:
 
         st.session_state.current = None
 
-    if st.button("Ask Bacon"):
+    if st.button("Ask More"):
         st.session_state.current = 0
-    if st.button("Rank Bacon"):
+    if st.button("Rank More"):
         st.session_state.current = 1
 
     if st.session_state.current != None:
