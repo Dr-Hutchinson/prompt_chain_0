@@ -116,7 +116,7 @@ def button_one():
                 st.write(row['combined'])
 
                 #st.write(row['initial_analysis'])
-                #st.markdown("Biographical Identification: \n\n" + row['final_output_results'])
+                #st.markdown("Biographical Identification: \n\n" + row['final_analysis'])
 
 
         if search_method == semantic_search:
@@ -402,7 +402,7 @@ def button_one():
 
                 # Load the initial_analysis dataframe from the CSV file
                 df = initial_analysis_df
-                final_output_results = []
+                final_analysis = []
                 relevant_texts = []
                 initial_analysis = []
 
@@ -418,11 +418,11 @@ def button_one():
 
                     # Run the initial_analysis step using the values from the dataframe
                     final_output = chain.run(submission_text+output_value+analysis)
-                    final_output_results.append(final_output)
+                    final_analysis.append(final_output)
                     #print(final_output)
 
                 # Create the final_outputs_df dataframe using the updated lists
-                final_outputs_df = pd.DataFrame({'relevant_texts': relevant_texts, 'initial_analysis': initial_analysis, 'final_output_results': final_output_results})
+                final_outputs_df = pd.DataFrame({'relevant_texts': relevant_texts, 'initial_analysis': initial_analysis, 'final_analysis': final_analysis})
                 st.write("Step 4 completed - GPT'3 analysis is complete.")
 
                 # Save the dataframe to a CSV file
@@ -449,7 +449,7 @@ def button_one():
                     section = row['relevant_texts']
                     st.write(section)
                     #st.write(row['initial_analysis'])
-                    analysis = row['final_output_results']
+                    analysis = row['final_analysis']
                     st.markdown("Biographical Identification: \n\n" + analysis)
 
                     def initial_output_collection():
