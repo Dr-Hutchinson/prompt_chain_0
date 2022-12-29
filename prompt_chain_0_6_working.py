@@ -287,6 +287,7 @@ def button_one():
                 # Extract the values from the dictionary using a list comprehension
                 output_values = [d['output'] for d in output_dict]
 
+                st.write("Step 2: Initial anaylsis completed. One final step remaining.")
                 # Print the output values to see the results
                 #st.write(output_values)
 
