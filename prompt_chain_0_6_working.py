@@ -33,8 +33,8 @@ st.set_page_config(
     page_icon='🔍'
 )
 
-os.environ["OPENAI_API_KEY"] = "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"
-openai.api_key = os.getenv("OPENAI_API_KEY")
+
+
 
 st.title("Ask A Source: Thomas More's 'The History of Richard III'")
 col1, col2 = st.columns([3.0,3.5])
