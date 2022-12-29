@@ -16,16 +16,15 @@ from google.oauth2 import service_account
 import ssl
 
 
-#scope = ['https://spreadsheets.google.com/feeds',
-             #'https://www.googleapis.com/auth/drive']
+scope = ['https://spreadsheets.google.com/feeds',
+             'https://www.googleapis.com/auth/drive']
 
-#credentials = service_account.Credentials.from_service_account_info(
-                    #st.secrets["gcp_service_account"], scopes = scope)
+credentials = service_account.Credentials.from_service_account_info(
+                    st.secrets["gcp_service_account"], scopes = scope)
 
-#gc = pygsheets.authorize(custom_credentials=credentials)
+gc = pygsheets.authorize(custom_credentials=credentials)
 
 #pygsheets credentials for Google Sheets API
-gc = pygsheets.authorize(service_file='C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\credentials.json')
 
 
 st.set_page_config(
@@ -132,7 +131,7 @@ def button_one():
                 #cell for running OpenAI embeddings on csv file.
 
                 #datafile_path = "./more_index_embeddings.csv"  # for your convenience, we precomputed the embeddings
-            datafile_path = "C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\more_index_embeddings.csv"
+            datafile_path = "./more_index_embeddings.csv"
             df = pd.read_csv(datafile_path)
             df["babbage_search"] = df.babbage_search.apply(eval).apply(np.array)
 
