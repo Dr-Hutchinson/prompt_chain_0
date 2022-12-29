@@ -351,7 +351,7 @@ def button_one():
                 final_analysis_df = pd.DataFrame({'output_values': output_values, 'final_analysis': final_analysis_results})
                 #final_analysis_df.to_csv('final_analysis.csv', index=False)
 
-                st.write("Step 3 - initial anaylsis completed. One final step remaining.")
+                st.write("Step 3 complete - initial anaylsis finished. One final step remaining.")
                 # Save the dataframe to a CSV file
 
                 # final answer prompt, version 0 - includes biographical, context, and final answer with supporting quote.
@@ -464,8 +464,8 @@ def button_one():
 
                     initial_output_collection()
 
-                st.write("Below is GPT-3's chain-of-thought process for generating these respones.")
-                st.dataframe(final_outputs_df)
+            st.write("Below is GPT-3's chain-of-thought process for generating these respones.")
+            st.dataframe(final_outputs_df)
 
 def button_two():
     #Rank Bacon_bot Responses
