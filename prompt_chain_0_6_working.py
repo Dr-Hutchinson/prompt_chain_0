@@ -57,7 +57,7 @@ def button_one():
         os.environ["OPENAI_API_KEY"] = "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"
 
         def embeddings_search():
-            datafile_path = "C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\more_index_embeddings.csv"
+            datafile_path = "./more_index_embeddings.csv"
             df = pd.read_csv(datafile_path)
             df["babbage_search"] = df.babbage_search.apply(eval).apply(np.array)
 
