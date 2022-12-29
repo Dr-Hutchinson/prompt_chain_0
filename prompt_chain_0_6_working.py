@@ -286,10 +286,10 @@ def button_one():
                 output_dict = output_df.to_dict('records')
 
                 # Extract the values from the dictionary using a list comprehension
-                output_values = [d['output'] for d in output_dict]
+                relevant_texts = [d['output'] for d in output_dict]
 
                 # Print the output values to see the results
-                #st.write(output_values)
+                #st.write(relevant_texts)
 
                     ### final answer prompt example
                     # Answer w/ Quotation - version 0
@@ -340,15 +340,15 @@ def button_one():
                 # Create an empty list to store the final_analysis results
                 final_analysis_results = []
 
-                # Iterate over the output_values list
-                for output_value in output_values:
+                # Iterate over the relevant_texts list
+                for output_value in relevant_texts:
                     # Run the final_analysis step and store the result in a variable
                     final_analysis = chain.run(submission_text+output_value)
                     # Add the final_analysis result to the list
                     final_analysis_results.append(final_analysis)
 
-                # Create a Pandas dataframe from the output_values list
-                final_analysis_df = pd.DataFrame({'output_values': output_values, 'final_analysis': final_analysis_results})
+                # Create a Pandas dataframe from the relevant_texts list
+                final_analysis_df = pd.DataFrame({'relevant_texts': relevant_texts, 'final_analysis': final_analysis_results})
                 #final_analysis_df.to_csv('final_analysis.csv', index=False)
 
                 st.write("Step 3 complete - initial anaylsis finished. One final step remaining.")
@@ -403,17 +403,17 @@ def button_one():
                 # Load the final_analysis dataframe from the CSV file
                 df = final_analysis_df
                 final_output_results = []
-                output_values = []
+                relevant_texts = []
                 final_analysis = []
 
                 # Iterate over the rows of the dataframe
                 for index, row in df.iterrows():
-                    # Get the values for the output_values and final_analysis columns for this row
-                    output_value = row['output_values']
+                    # Get the values for the relevant_texts and final_analysis columns for this row
+                    output_value = row['relevant_texts']
                     analysis = row['final_analysis']
 
                     # Add the values to the lists
-                    output_values.append(output_value)
+                    relevant_texts.append(output_value)
                     final_analysis.append(analysis)
 
                     # Run the final_analysis step using the values from the dataframe
@@ -422,7 +422,7 @@ def button_one():
                     #print(final_output)
 
                 # Create the final_outputs_df dataframe using the updated lists
-                final_outputs_df = pd.DataFrame({'output_values': output_values, 'final_analysis': final_analysis, 'final_output_results': final_output_results})
+                final_outputs_df = pd.DataFrame({'relevant_texts': relevant_texts, 'final_analysis': final_analysis, 'final_output_results': final_output_results})
                 st.write("Step 4 completed, GPT'3 analysis is complete.")
 
                 # Save the dataframe to a CSV file
@@ -446,7 +446,7 @@ def button_one():
                     st.markdown("**Question:**")
                     st.write(submission_text)
                     st.markdown("**Below is GPT-3's analysis of a section of More's text that it found relevant to your qustion.**")
-                    section = row['output_values']
+                    section = row['relevant_texts']
                     st.write(section)
                     #st.write(row['final_analysis'])
                     analysis = row['final_output_results']
@@ -464,7 +464,7 @@ def button_one():
 
                     initial_output_collection()
 
-            st.write("Below is GPT-3's chain-of-thought process for generating these respones.")
+            st.header("Below is GPT-3's chain-of-thought process for generating these respones.")
             st.dataframe(final_outputs_df)
 
 def button_two():
