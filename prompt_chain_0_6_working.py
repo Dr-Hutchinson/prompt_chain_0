@@ -54,7 +54,7 @@ def button_one():
     submission_text = st.text_area("Enter your question below. ")
     submit_button_1 = st.button(label='Click here to submit your question. It can take a minute for me to reflect, so I beg your patience as I consider your inquiry.')
     if submit_button_1:
-        os.environ["OPENAI_API_KEY"] = "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"
+        os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
 
         def embeddings_search():
             datafile_path = "./more_index_embeddings.csv"
