@@ -424,7 +424,7 @@ def button_one():
                 # Create the final_outputs_df dataframe using the updated lists
                 final_outputs_df = pd.DataFrame({'output_values': output_values, 'final_analysis': final_analysis, 'final_output_results': final_output_results})
                 st.write("Step 4 completed, GPT'3 analysis is complete.")
-                st.dataframe(final_outputs_df)
+
                 # Save the dataframe to a CSV file
                 #final_outputs_df.to_csv('final_outputs.csv', index=False)
 
@@ -464,6 +464,8 @@ def button_one():
 
                     initial_output_collection()
 
+                st.write("Below is GPT-3's chain-of-thought process for generating these respones.")
+                st.dataframe(final_outputs_df)
 
 def button_two():
     #Rank Bacon_bot Responses
