@@ -446,6 +446,18 @@ def button_one():
                     #st.write(row['final_analysis'])
                     st.markdown("Biographical Identification: \n\n" + row['final_output_results'])
 
+                    def initial_output_collection():
+                        now = dt.now()
+                        d1 = {'question':[submission_text], 'section':[section], 'analysis':[analysis], 'date':[now]}
+                        df1 = pd.DataFrame(data=d1, index=None)
+                        sh1 = gc.open('aas_more_outputs')
+                        wks1 = sh1[0]
+                        cells1 = wks1.get_all_values(include_tailing_empty_rows=False, include_tailing_empty=False, returnas='matrix')
+                        end_row1 = len(cells1)
+                        wks1.set_dataframe(df1,(end_row1+1,1), copy_head=False, extend=True)
+
+                    initial_output_collection()
+
 
 def button_two():
     #Rank Bacon_bot Responses
