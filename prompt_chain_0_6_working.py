@@ -442,7 +442,7 @@ def button_one():
                   row = final_outputs_df.iloc[i]
 
                   # Create an expander for the current row, with the label set to the row number
-                  with st.expander(label="Answer " + str(i) + ":", expanded=False):
+                  with st.expander(label="Answer " + str(i+1) + ":", expanded=False):
                     st.markdown("**Question:**")
                     st.write(submission_text)
                     st.markdown("**Below is GPT-3's analysis of a section of More's text that it found relevant to your qustion.**")
