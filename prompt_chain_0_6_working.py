@@ -52,7 +52,7 @@ def button_one():
 
     search_method = st.radio("Choose a method:", (semantic_search, ask_a_source))
     submission_text = st.text_area("Enter your question below. ")
-    submit_button_1 = st.button(label='Click here to submit your question. It can take a minute for me to reflect, so I beg your patience as I consider your inquiry.')
+    submit_button_1 = st.button(label='Click here to submit your question.')
     if submit_button_1:
         os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
 
@@ -172,6 +172,7 @@ def button_one():
             similarity3 = results_df.iloc[2]["similarities"]
             combined3 = results_df.iloc[2]["combined"]
 
+            st.write("Step 1 complete - identified relevant text sections.")
                 # Write the DataFrame to a CSV file
             #results_df.to_csv('results_df.csv', index=False, columns=["similarities", "combined"])
                 #end code
@@ -227,7 +228,7 @@ def button_one():
 
             ####combinesfunction for combining sections + outputs, and then filtering via regex for relevant sections
 
-            st.write("Step 1: Relevancy check completed.")
+            st.write("Step 2 complete - relevancy check completed.")
 
 
             # combined function for combining sections + outputs, and then filtering via regex for relevant sections
@@ -261,7 +262,7 @@ def button_one():
                 # Check if there are any rows in the relevant_df dataframe
             if relevant_df.empty:
                 # If there are no rows, print the desired message
-                st.write("No relevant sections identified. Here is GPT-3 analysis of those sections.")
+                st.header("GPT-3 determined that none of the selected text sections are relevant to your question. Here is GPT-3's analysis of those sections.")
                 st.dataframe(combined_df)
             else:
                 # Otherwise, continue with the rest of the script
@@ -422,6 +423,7 @@ def button_one():
 
                 # Create the final_outputs_df dataframe using the updated lists
                 final_outputs_df = pd.DataFrame({'output_values': output_values, 'final_analysis': final_analysis, 'final_output_results': final_output_results})
+                st.write("Step 3 completed, GPT'3 analysis complete.")
                 st.dataframe(final_outputs_df)
                 # Save the dataframe to a CSV file
                 #final_outputs_df.to_csv('final_outputs.csv', index=False)
@@ -440,7 +442,7 @@ def button_one():
                   row = final_outputs_df.iloc[i]
 
                   # Create an expander for the current row, with the label set to the row number
-                  with st.expander(label="Answer " + str(i) + ":", expanded=True):
+                  with st.expander(label="Answer " + str(i) + ":", expanded=False):
                     st.markdown("**Question:**")
                     st.write(submission_text)
                     st.markdown("**Below is GPT-3's analysis of a section of More's text that it found relevant to your qustion.**")
