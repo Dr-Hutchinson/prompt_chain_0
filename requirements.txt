@@ -1,0 +1,7 @@
+langchain==0.0.52
+numpy==1.17.4
+openai==0.24.0
+pandas==1.5.2
+protobuf==4.21.12
+pygsheets==2.0.3.1
+streamlit==1.16.0
