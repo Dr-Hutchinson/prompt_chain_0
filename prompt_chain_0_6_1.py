@@ -66,7 +66,7 @@ def button_one():
 
 
     search_method = st.radio("Choose a method:", (semantic_search, ask_a_paragraph, ask_a_source))
-    section_number = st.number_input('Select a section number if you have selected Ask a Paragraph. You can find the section numbers either through semantic search, or via this link.')
+    section_number = st.number_input('Select a section number if you have selected Ask a Paragraph. You can find the section numbers either through semantic search, or via this link.', step=1)
     submission_text = st.text_area("Enter your question below. ")
     submit_button_1 = st.button(label='Click here to submit your question.')
     if submit_button_1:
@@ -282,7 +282,7 @@ def button_one():
             st.write(knowledge_check)
             st.markdown("**Search Summary:**")
             st.write(reasoning)
-            st.markdown("**GPT-3's Answer:")
+            st.markdown("**GPT-3's Answer:**")
             st.write(output)
 
         def ask_a_source():
