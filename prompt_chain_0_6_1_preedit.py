@@ -272,8 +272,25 @@ def button_one():
             final_answer = chain2.run(submission_text + "\n" + section + "\n3. Object of the Question\n" + knowledge_check + "\n6. Research Summary\n" + reasoning + "\n7. Research Summary Answer:\n" + output)
             st.write()
 
-        def ask_a_source():
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+        if search_method == semantic_search:
+            embeddings_search()
+        if search_method == self_ask_with_search:
+            self_ask_with_search()
+        else:
             st.header("GPT-3's analysis is underway. It can take a minute or two for every step of the process to be completed. GPT-3's progress will be documented below.")
 
                             ### embeddings search
@@ -618,20 +635,6 @@ def button_one():
 
                 st.header("Below is GPT-3's chain-of-thought process for generating these respones.")
                 st.dataframe(final_outputs_df)
-
-
-
-
-
-
-
-
-        if search_method == semantic_search:
-            embeddings_search()
-        if search_method == self_ask_with_search:
-            self_ask_with_search()
-        else:
-            ask_a_source()
 
 def button_two():
     #Rank Bacon_bot Responses
