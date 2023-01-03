@@ -145,7 +145,7 @@ def button_one():
 
             df = pd.read_csv(datafile_path, encoding='latin1')
             section_select = r"Summary: Section_{}(:|$)".format(section_number)
-            result = df[df['combined'].str.contains(section_number, regex=True)]
+            result = df[df['combined'].str.contains(section_select, regex=True)]
 
             if not result.empty:
               # Select the 'combined' column of the result DataFrame
