@@ -62,7 +62,7 @@ with col1:
         pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
         st.markdown(pdf_display, unsafe_allow_html=True)
 
-    show_pdf("my_pdf.pdf")
+    show_pdf("./annotated_full_text.pdf")
 
         #st_display_pdf("C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\annotated_full_text.pdf")
 
