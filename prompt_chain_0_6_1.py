@@ -196,7 +196,7 @@ def button_one():
 
             llm = OpenAI(model_name="text-davinci-003", max_tokens = 500, temperature=0.0)
             chain1 = LLMChain(llm=llm, prompt=prompt_from_string_examples5)
-            knowledge_check = chain1.run(submission_text+section)
+            knowledge_check = chain1.run(submission_text+str(section))
 
             # pass on revised quesiton for search
 
