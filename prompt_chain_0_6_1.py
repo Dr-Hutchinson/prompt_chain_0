@@ -40,11 +40,11 @@ os.environ["SERPAPI_API_KEY"] = st.secrets["serpapi_api_key"]
 st.title("Ask A Source: Thomas More's 'The History of Richard III'")
 col1, col2 = st.columns([3.0,3])
 with col1:
-    book_pic = st.image(image ='./more_page.jpg', caption="From Thomas More's 'History of Richard III' (1557). British Library.", width=500)
+    #book_pic = st.image(image ='./more_page.jpg', caption="From Thomas More's 'History of Richard III' (1557). British Library.", width=500)
     #st.write("Explore the current data.")
     #df = pd.read_csv('richardbot1_data.csv')
     #st.dataframe(df, height=500)
-    #st.markdown("""
+    st.markdown("""
     #<embed src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="800" height="800">
     #""", unsafe_allow_html=True)
     #pdf_display = F'<iframe src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="700" height="1000" type="application/pdf"></iframe>'
@@ -65,6 +65,9 @@ with col1:
     #show_pdf("./annotated_full_text.pdf")
 
         #st_display_pdf("C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\annotated_full_text.pdf")
+    indexed_text= "./more_index_combined.csv"
+    st.dataframe(indexed_text)
+
 
 def button_one():
     st.write("This application uses GPT-3 to answer questions about Thomas More's [_History of King Richard III_](https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf). Choose one of the options below, and pose a question about the text.")
