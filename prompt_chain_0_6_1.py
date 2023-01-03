@@ -1,4 +1,4 @@
-#from langchain.prompts import PromptTemplate
+from langchain.prompts import PromptTemplate
 from langchain.prompts import FewShotPromptTemplate
 from langchain.chains import LLMChain
 from langchain import OpenAI, SerpAPIWrapper
