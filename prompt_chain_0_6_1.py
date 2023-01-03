@@ -63,6 +63,8 @@ with col1:
     #show_pdf("./annotated_full_text.pdf")
 
         #st_display_pdf("C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\annotated_full_text.pdf")
+
+    st.write("More's text has been broken up into different sections for enable GPT-3 to access it.")
     datafile_path = "./more_index_combined.csv"
     df_indexed_text = pd.read_csv(datafile_path, encoding='latin1')
     st.dataframe(df_indexed_text)
