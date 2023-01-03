@@ -292,7 +292,7 @@ def button_one():
             st.write(knowledge_check)
             st.markdown("**Search Summary:**")
             st.write(reasoning)
-            st.markdown("**GPT-3's Answer:**")
+            st.markdown("**GPT-3's Interpretation:**")
             st.write(output)
 
         def ask_a_source():
