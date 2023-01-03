@@ -138,6 +138,8 @@ def button_one():
 
         def self_ask_with_search():
 
+            datafile_path = "./more_index_combined.csv"
+
             df = pd.read_csv(datafile_path, encoding='latin1')
             section_select = r"Summary: Section_{}(:|$)".format(section_number)
             result = df[df['combined'].str.contains(search_term, regex=True)]
