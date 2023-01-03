@@ -143,10 +143,13 @@ def button_one():
             df = pd.read_csv(datafile_path, encoding='latin1')
             section_select = r"Summary: Section_{}(:|$)".format(section_number)
             result = df[df['combined'].str.contains(section_select, regex=True)]
-            # Select the 'combined' column of the result DataFrame
-            result = result.loc[:, 'combined']
-            # Do something with the resulting cell value
-            section = result.iloc[0]
+
+            if not result.empty:
+              # Select the 'combined' column of the result DataFrame
+              result = result.loc[:, 'combined']
+
+                    # Do something with the resulting cell value
+              section = result.iloc[0]
 
 
             # self-search experiment 0.3 - revised question prompt examples
