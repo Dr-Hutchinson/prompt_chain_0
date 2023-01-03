@@ -38,7 +38,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 os.environ["SERPAPI_API_KEY"] = st.secrets["serpapi_api_key"]
 
 st.title("Ask A Source: Thomas More's 'The History of Richard III'")
-col1, col2 = st.columns([3.0,3])
+col1, col2 = st.columns([3,2.5])
 with col1:
     #book_pic = st.image(image ='./more_page.jpg', caption="From Thomas More's 'History of Richard III' (1557). British Library.", width=500)
     #st.write("Explore the current data.")
