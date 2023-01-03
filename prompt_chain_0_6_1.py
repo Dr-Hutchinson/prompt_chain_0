@@ -142,15 +142,16 @@ def button_one():
 
             df = pd.read_csv(datafile_path, encoding='latin1')
             section_select = r"Summary: Section_{}(:|$)".format(section_number)
-            result = df[df['combined'].str.contains(section_select, regex=True)]
+            result = df[df['combined'].str.extract(section_select)]
+
+            # Set a default value for the section variable
+            section = ""
 
             if not result.empty:
-              # Select the 'combined' column of the result DataFrame
-              result = result.loc[:, 'combined']
-
-                    # Do something with the resulting cell value
-              section = result.iloc[0]
-
+                # Select the 'combined' column of the result DataFrame
+                result = result.loc[:, 'combined']
+                # Do something with the resulting cell value
+                section = result.iloc[0]
 
             # self-search experiment 0.3 - revised question prompt examples
             dertford_question = "2. Text:\nSummary: Section_0: King Edward IV died in 1483, leaving behind seven children. Edward, the eldest, was 13 years old at the time of his father's death. Richard, the second son, was two years younger. Elizabeth, Cecily, Brigette, Anne, and Katherine were the King's daughters. Elizabeth was later married to King Henry VII, and Anne was married to Thomas Howard, Earl of Surrey. Katherine was the last of the King's children to marry, and she eventually married a man of wealth. Text: Section_0: King Edward of that name the Fourth, after he had lived fifty and three years, seven months, and six days, and thereof reigned two and twenty years, one month, and eight days, died at Westminster the ninth day of April, the year of our redemption, a thousand four hundred four score and three, leaving much fair issue, that is, Edward the Prince, thirteen years of age; Richard Duke of York, two years younger; Elizabeth, whose fortune and grace was after to be queen, wife unto King Henry the Seventh, and mother unto the Eighth; Cecily not so fortunate as fair; Brigette, who, representing the virtue of her whose name she bore, professed and observed a religious life in Dertford, a house of cloistered Nuns; Anne, who was after honorably married unto Thomas, then Lord Howard and after Earl of Surrey; and Katherine, who long time tossed in either fortune, sometime in wealth, often in adversity, at the last, if this be the last, for yet she lives, is by the goodness of her nephew, King Henry the Eighth, in very prosperous state, and worthy her birth and virtue.\n3. Object of the Question: The religious order associated with Dertford\n4. Historical Context: 15th century England\n5. Revised User Question: What was the religious order associated with Dertford in 15th century England?\nExcellent, let's try another."
