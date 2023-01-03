@@ -137,6 +137,8 @@ def button_one():
 
         def self_ask_with_search():
 
+            datafile_path = "./more_index_combined.csv"
+
             df = pd.read_csv(datafile_path, encoding='latin1')
 
             # Get the section number from the user input
