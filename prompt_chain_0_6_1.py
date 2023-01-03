@@ -271,8 +271,11 @@ def button_one():
             st.write('3. Analysis complete.')
             st.subheader("Here is GPT-3's Answer:")
             st.write(final_answer)
-
-            
+            st.subheader("Here is how GPT-3 Got it's Answer:")
+            st.write(str(section))
+            st.write(knowledge_check)
+            st.write(reasoning)
+            st.write(output)
 
         def ask_a_source():
 
