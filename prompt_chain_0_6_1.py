@@ -226,7 +226,7 @@ def button_one():
               output = step[1]
               reasoning += f"{action.tool_input}: {output}\n"
 
-            st.write("3. Research Conducted.")
+            st.write("2. Research Conducted.")
 
             # final report prompt example
 
