@@ -266,8 +266,8 @@ def button_one():
 
             llm = OpenAI(model_name="text-davinci-003", max_tokens = 1000, temperature=0.0)
             chain2 = LLMChain(llm=llm, prompt=prompt_from_string_examples6)
-            final_answer = chain2.run(submission_text + "\n" + section + "\n3. Object of the Question\n" + knowledge_check + "\n6. Research Summary\n" + reasoning + "\n7. Research Summary Answer:\n" + output)
-            st.write()
+            final_answer = chain2.run(submission_text + "\n" + str(section) + "\n3. Object of the Question\n" + knowledge_check + "\n6. Research Summary\n" + reasoning + "\n7. Research Summary Answer:\n" + output)
+            st.write(final_answer)
 
         def ask_a_source():
 
