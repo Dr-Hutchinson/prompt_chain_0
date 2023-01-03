@@ -142,7 +142,7 @@ def button_one():
             df = pd.read_csv(datafile_path, encoding='latin1')
 
             # Search the 'combined' column for the value you want using a regular expression
-            search_term = r"Summary: Section_{}(:|$)".format(section_number)
+            search_term = r"Summary: Section_{}(:|$)".format(str(section_number))
             result = df[df['combined'].str.match(search_term)]
 
                 # Set a default value for the section variable
