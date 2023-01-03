@@ -54,7 +54,7 @@ with col1:
 
     #st.markdown(pdf_display, unsafe_allow_html=True)
 
-    file_path = "./annotated_full_text.pdf"
+    #file_path = "./annotated_full_text.pdf"
 
     def show_pdf(file_path):
         with open(file_path,"rb") as f:
