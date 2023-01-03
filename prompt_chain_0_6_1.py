@@ -142,7 +142,7 @@ def button_one():
             df = pd.read_csv(datafile_path, encoding='latin1')
 
             # Get the section number from the user input
-            section_number = st.number_input('Select a section number if you have selected Ask a Paragraph.', 0, 175)
+            #section_number = st.number_input('Select a section number if you have selected Ask a Paragraph.', 0, 175)
 
             # Wait for the user to click the button
             button1 = st.button('click me')
