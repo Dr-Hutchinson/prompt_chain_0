@@ -1,4 +1,3 @@
-from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
 from langchain.prompts import FewShotPromptTemplate
 from langchain.chains import LLMChain
@@ -14,6 +13,7 @@ import streamlit as st
 import pygsheets
 from google.oauth2 import service_account
 import ssl
+import base64
 
 
 #scope = ['https://spreadsheets.google.com/feeds',
@@ -23,9 +23,10 @@ import ssl
                     #st.secrets["gcp_service_account"], scopes = scope)
 
 #gc = pygsheets.authorize(custom_credentials=credentials)
+gc = pygsheets.authorize(service_file='C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\credentials.json')
+
 
 #pygsheets credentials for Google Sheets API
-gc = pygsheets.authorize(service_file='C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\credentials.json')
 
 
 st.set_page_config(
@@ -34,31 +35,44 @@ st.set_page_config(
     page_icon='🔍'
 )
 
-os.environ["OPENAI_API_KEY"] = "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"
+#os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
+#openai.api_key = os.getenv("OPENAI_API_KEY")
+
+os.environ["OPENAI_API_KEY"] = "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"
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+
+
 st.title("Ask A Source: Thomas More's 'The History of Richard III'")
-col1, col2 = st.columns([3.0,3.5])
+col1, col2 = st.columns([3.0,3])
 with col1:
-    book_pic = st.image(image ='./more_page.jpg', caption="From Thomas More's 'History of Richard III' (1557). British Library.", width=500)
+    #book_pic = st.image(image ='./more_page.jpg', caption="From Thomas More's 'History of Richard III' (1557). British Library.", width=500)
     #st.write("Explore the current data.")
     #df = pd.read_csv('richardbot1_data.csv')
     #st.dataframe(df, height=500)
+    st.markdown("""
+    <embed src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="800" height="800">
+    """, unsafe_allow_html=True)
+
+        #st_display_pdf("C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\annotated_full_text.pdf")
 
 def button_one():
     st.write("This application uses GPT-3 to answer questions about Thomas More's [_History of King Richard III_](https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf). Choose one of the options below, and pose a question about the text.")
 
     semantic_search = "Semantic Search: Enter a question, and recieve sections of the text that are the most closely related."
+    #ask_a_paragraph = "Ask a Paragraph: Select a paragraph from the text, and then pose questions
     ask_a_source = "Ask A Source: Pose a question about the text, and GPT-3 will share answers drawn from the text along with historical analysis."
+
 
     search_method = st.radio("Choose a method:", (semantic_search, ask_a_source))
     submission_text = st.text_area("Enter your question below. ")
-    submit_button_1 = st.button(label='Click here to submit your question. It can take a minute for me to reflect, so I beg your patience as I consider your inquiry.')
+    submit_button_1 = st.button(label='Click here to submit your question.')
     if submit_button_1:
-        os.environ["OPENAI_API_KEY"] = "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"
+        #os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
+        os.environ["OPENAI_API_KEY"] = "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"
 
         def embeddings_search():
-            datafile_path = "C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\more_index_embeddings.csv"
+            datafile_path = "./more_index_embeddings.csv"
             df = pd.read_csv(datafile_path)
             df["babbage_search"] = df.babbage_search.apply(eval).apply(np.array)
 
@@ -116,13 +130,15 @@ def button_one():
                 st.write(row['similarities'])
                 st.write(row['combined'])
 
-                #st.write(row['final_analysis'])
-                #st.markdown("Biographical Identification: \n\n" + row['final_output_results'])
+                #st.write(row['initial_analysis'])
+                #st.markdown("Biographical Identification: \n\n" + row['final_analysis'])
 
 
         if search_method == semantic_search:
             embeddings_search()
         else:
+            st.header("GPT-3's analysis is underway. It can take a minute or two for every step of the process to be completed. GPT-3's progress will be documented below.")
+
                             ### embeddings search
                 #begin code
 
@@ -132,7 +148,7 @@ def button_one():
                 #cell for running OpenAI embeddings on csv file.
 
                 #datafile_path = "./more_index_embeddings.csv"  # for your convenience, we precomputed the embeddings
-            datafile_path = "C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\more_index_embeddings.csv"
+            datafile_path = "./more_index_embeddings.csv"
             df = pd.read_csv(datafile_path)
             df["babbage_search"] = df.babbage_search.apply(eval).apply(np.array)
 
@@ -171,10 +187,11 @@ def button_one():
             similarity3 = results_df.iloc[2]["similarities"]
             combined3 = results_df.iloc[2]["combined"]
 
+            st.write("Step 1 complete - identified the most semantically similar text sections.")
                 # Write the DataFrame to a CSV file
-            results_df.to_csv('results_df.csv', index=False, columns=["similarities", "combined"])
+            #results_df.to_csv('results_df.csv', index=False, columns=["similarities", "combined"])
                 #end code
-            st.write("Semantic search completed.")
+
                 ### few_shot examples for text relevance prompt
                 #relevance_check_w_similairities.0 (prompts w/ similarities & probability)
 
@@ -226,7 +243,7 @@ def button_one():
 
             ####combinesfunction for combining sections + outputs, and then filtering via regex for relevant sections
 
-
+            st.write("Step 2 complete - relevancy check completed.")
 
 
             # combined function for combining sections + outputs, and then filtering via regex for relevant sections
@@ -260,11 +277,9 @@ def button_one():
                 # Check if there are any rows in the relevant_df dataframe
             if relevant_df.empty:
                 # If there are no rows, print the desired message
-                st.write("No relevant sections identified. Here is GPT-3 analysis of those sections.")
+                st.header("GPT-3 determined that none of the selected text sections are relevant to your question. Here is GPT-3's analysis of those sections.")
                 st.dataframe(combined_df)
             else:
-                st.write("Relevancy check completed.")
-
                 # Otherwise, continue with the rest of the script
                 def combine_strings(row):
                     return row['output'] + '\nKey Terms\n' + row['r_check']
@@ -286,10 +301,10 @@ def button_one():
                 output_dict = output_df.to_dict('records')
 
                 # Extract the values from the dictionary using a list comprehension
-                output_values = [d['output'] for d in output_dict]
+                relevant_texts = [d['output'] for d in output_dict]
 
                 # Print the output values to see the results
-                #st.write(output_values)
+                #st.write(relevant_texts)
 
                     ### final answer prompt example
                     # Answer w/ Quotation - version 0
@@ -337,22 +352,21 @@ def button_one():
                 llm = OpenAI(model_name="text-davinci-003", max_tokens = 750, temperature=0.0)
                 chain = LLMChain(llm=llm, prompt=prompt_from_string_examples)
 
-                # Create an empty list to store the final_analysis results
-                final_analysis_results = []
+                # Create an empty list to store the initial_analysis results
+                initial_analysis_results = []
 
-                # Iterate over the output_values list
-                for output_value in output_values:
-                    # Run the final_analysis step and store the result in a variable
-                    final_analysis = chain.run(submission_text+output_value)
-                    # Add the final_analysis result to the list
-                    final_analysis_results.append(final_analysis)
+                # Iterate over the relevant_texts list
+                for output_value in relevant_texts:
+                    # Run the initial_analysis step and store the result in a variable
+                    initial_analysis = chain.run(submission_text+output_value)
+                    # Add the initial_analysis result to the list
+                    initial_analysis_results.append(initial_analysis)
 
-                # Create a Pandas dataframe from the output_values list
-                final_analysis_df = pd.DataFrame({'output_values': output_values, 'final_analysis': final_analysis_results})
-                #final_analysis_df.to_csv('final_analysis.csv', index=False)
-                st.write("Initial analysis completed.")
+                # Create a Pandas dataframe from the relevant_texts list
+                initial_analysis_df = pd.DataFrame({'relevant_texts': relevant_texts, 'initial_analysis': initial_analysis_results})
+                #initial_analysis_df.to_csv('initial_analysis.csv', index=False)
 
-
+                st.write("Step 3 complete - initial anaylsis finished. One final step remaining.")
                 # Save the dataframe to a CSV file
 
                 # final answer prompt, version 0 - includes biographical, context, and final answer with supporting quote.
@@ -401,30 +415,31 @@ def button_one():
 
 
 
-                # Load the final_analysis dataframe from the CSV file
-                df = final_analysis_df
-                final_output_results = []
-                output_values = []
+                # Load the initial_analysis dataframe from the CSV file
+                df = initial_analysis_df
                 final_analysis = []
+                relevant_texts = []
+                initial_analysis = []
 
                 # Iterate over the rows of the dataframe
                 for index, row in df.iterrows():
-                    # Get the values for the output_values and final_analysis columns for this row
-                    output_value = row['output_values']
-                    analysis = row['final_analysis']
+                    # Get the values for the relevant_texts and initial_analysis columns for this row
+                    output_value = row['relevant_texts']
+                    analysis = row['initial_analysis']
 
                     # Add the values to the lists
-                    output_values.append(output_value)
-                    final_analysis.append(analysis)
+                    relevant_texts.append(output_value)
+                    initial_analysis.append(analysis)
 
-                    # Run the final_analysis step using the values from the dataframe
+                    # Run the initial_analysis step using the values from the dataframe
                     final_output = chain.run(submission_text+output_value+analysis)
-                    final_output_results.append(final_output)
+                    final_analysis.append(final_output)
                     #print(final_output)
 
                 # Create the final_outputs_df dataframe using the updated lists
-                final_outputs_df = pd.DataFrame({'output_values': output_values, 'final_analysis': final_analysis, 'final_output_results': final_output_results})
-                st.dataframe(final_outputs_df)
+                final_outputs_df = pd.DataFrame({'relevant_texts': relevant_texts, 'initial_analysis': initial_analysis, 'final_analysis': final_analysis})
+                st.write("Step 4 completed - GPT'3 analysis is complete.")
+
                 # Save the dataframe to a CSV file
                 #final_outputs_df.to_csv('final_outputs.csv', index=False)
 
@@ -441,92 +456,31 @@ def button_one():
                   # Get the current row
                   row = final_outputs_df.iloc[i]
 
-                  expander_label = 'Answer ' + str(i) + ":"
-
                   # Create an expander for the current row, with the label set to the row number
-                  with st.expander(label=expander_label, expanded=True):
-                    # Display each cell in the row as a separate block of text
-                    with st.form(key=expander_label):
+                  with st.expander(label="Answer " + str(i+1) + ":", expanded=False):
+                    st.markdown("**Question:**")
+                    st.write(submission_text)
+                    st.markdown("**Below is GPT-3's analysis of a section of More's text that it found relevant to your qustion.**")
+                    section = row['relevant_texts']
+                    st.write(section)
+                    #st.write(row['initial_analysis'])
+                    analysis = "Biographical Identification " + row['final_analysis']
+                    st.markdown(analysis)
 
-                        st.markdown("**Question:**")
-                        st.write(submission_text)
-                        st.markdown("**Below is GPT-3's analysis of a section of More's text that it found relevant to your qustion.**")
-                        section = row['output_values']
-                        st.write(section)
-                        #st.write(row['final_analysis'])
-                        analysis = row['final_output_results']
-                        st.markdown("Biographical Identification: \n\n" + analysis)
-                        st.markdown("**Please rank GPT-3's response below to help improve the quality of these results.**")
-                        relevance_score = st.slider("Rank the Relevance of the Text Section to Your Question:", 0,5,  key=expander_label +'relevance')
-                        bio_score = st.slider("Rank the Biographical Identification:", 0,5, key=expander_label + "bio")
-                        context_score = st.slider("Rank the Historical Context:", 0,5, key=expander_label + 'context')
-                        final_answer_score = st.slider("Rank the Final Answer:", 0,5, key=expander_label + 'final_answer')
-                        ranking_submit = st.form_submit_button("Click here to submit rankings.")
+                    def initial_output_collection():
+                        now = dt.now()
+                        d1 = {'question':[submission_text], 'section':[section], 'analysis':[analysis], 'date':[now]}
+                        df1 = pd.DataFrame(data=d1, index=None)
+                        sh1 = gc.open('aas_more_outputs')
+                        wks1 = sh1[0]
+                        cells1 = wks1.get_all_values(include_tailing_empty_rows=False, include_tailing_empty=False, returnas='matrix')
+                        end_row1 = len(cells1)
+                        wks1.set_dataframe(df1,(end_row1+1,1), copy_head=False, extend=True)
 
-                        def initial_output_collection():
-                            now = dt.now()
-                            d1 = {'question':[submission_text], 'section':[section], 'analysis':[analysis], 'date':[now]}
-                            df1 = pd.DataFrame(data=d1, index=None)
-                            sh1 = gc.open('aas_more_outputs')
-                            wks1 = sh1[0]
-                            cells1 = wks1.get_all_values(include_tailing_empty_rows=False, include_tailing_empty=False, returnas='matrix')
-                            end_row1 = len(cells1)
-                            wks1.set_dataframe(df1,(end_row1+1,1), copy_head=False, extend=True)
+                    initial_output_collection()
 
-                        initial_output_collection()
-
-                        if ranking_submit:
-
-                            rank_submit = "Ranking submitted, thank you!"
-
-                            if 'rank_submit' not in st.session_state:
-                                st.session_state.rank_submit = rank_submit
-
-
-                            #def form_callback():
-                                #st.write(st.session_state.bio
-                                #st.write(st.session_state.context)
-
-                            #if 'submission_text' not in st.session_state:
-                                #st.session_state.submission_text = submission_text
-
-                            #if 'section' not in st.session_state:
-                                #st.session_state.section = section
-
-                            #if 'analysis' not in st.session_state:
-                                #st.session_state.analysis = Analysis
-
-                            #if 'relevance_score' not in st.session_state:
-                                #st.session_state.relevance_score = relevance_score
-
-                            #if 'bio_score' not in st.session_state:
-                                #st.session_state.bio_score = bio_score
-
-                            #if 'context_score' not in st.session_state:
-                                #st.session_state.context_score = context_score
-
-                            #if 'final_answer_score' not in st.session_state:
-                                #st.session_state.final_answer_score = final_answer_score
-
-                            sh1 = gc.open('aas_more_rankings')
-                            wks1 = sh1[0]
-                            df = wks1.get_as_df(has_header=True, index_column=None, start='A1', end=('K2'), numerize=False)
-                            now = dt.now()
-                            ranking_score = [st.session_state.relevance_score, st.session_state.bio_score, st.session_state.context_score, st.session_state.final_answer_score]
-                            ranking_average = mean(ranking_score)
-
-                            def ranking_collection():
-                                #d4 = {'user':["0"], 'user_id':[user_id],'question':[submission_text], 'output':[final_analysis], 'accuracy_score':[accuracy_score], 'text_score':[text_score],'interpretation_score':[interpretation_score], 'coherence':[coherence_rank], 'overall_ranking':[ranking_average], 'date':[now]}
-                                d4 = {'question':[st.session_state.submission_text], 'section':[st.session_state.section], 'analysis':[st.session_state.analysis], 'relevance_score':[st.session_state.relevance_score ], 'bio_score':[st.session_state.bio_score],'context_score':[st.session_state.context_score], 'final_answer_score':[st.session_state.final_answer_score], 'overall_ranking':[ranking_average], 'date':[now]}
-                                df4 = pd.DataFrame(data=d4, index=None)
-                                sh4 = gc.open('aas_more_rankings')
-                                wks4 = sh4[0]
-                                cells4 = wks4.get_all_values(include_tailing_empty_rows=False, include_tailing_empty=False, returnas='matrix')
-                                end_row4 = len(cells4)
-                                wks4.set_dataframe(df4,(end_row4+1,1), copy_head=False, extend=True)
-
-                            ranking_collection()
-                            st.write(st.session_state.rank_submit)
+                st.header("Below is GPT-3's chain-of-thought process for generating these respones.")
+                st.dataframe(final_outputs_df)
 
 def button_two():
     #Rank Bacon_bot Responses
@@ -541,7 +495,7 @@ def button_two():
         st.subheader('Your Question')
         st.write(submission_text)
         st.subheader("The AI's Answer:")
-        st.write(final_analysis)
+        st.write(initial_analysis)
         st.subheader("The AI's Interpretation:")
 
         with st.form('form2'):
@@ -558,7 +512,7 @@ def button_two():
                 df = wks1.get_as_df(has_header=True, index_column=None, start='A1', end=('K2'), numerize=False)
                 name = df['user'][0]
                 submission_text = df['question'][0]
-                output = df['final_analysis'][0]
+                output = df['initial_analysis'][0]
                 combined_df = df['combined_df'][0]
                 relevant_texts = df['evidence'][0]
                 now = dt.now()
@@ -566,7 +520,7 @@ def button_two():
                 ranking_average = mean(ranking_score)
 
                 def ranking_collection():
-                    d4 = {'user':["0"], 'user_id':[user_id],'question':[submission_text], 'output':[final_analysis], 'accuracy_score':[accuracy_score], 'text_score':[text_score],'interpretation_score':[interpretation_score], 'coherence':[coherence_rank], 'overall_ranking':[ranking_average], 'date':[now]}
+                    d4 = {'user':["0"], 'user_id':[user_id],'question':[submission_text], 'output':[initial_analysis], 'accuracy_score':[accuracy_score], 'text_score':[text_score],'interpretation_score':[interpretation_score], 'coherence':[coherence_rank], 'overall_ranking':[ranking_average], 'date':[now]}
                     df4 = pd.DataFrame(data=d4, index=None)
                     sh4 = gc.open('AAS_rankings')
                     wks4 = sh4[0]
@@ -595,9 +549,9 @@ with col2:
 
         st.session_state.current = None
 
-    if st.button("Ask Bacon"):
+    if st.button("Ask More"):
         st.session_state.current = 0
-    if st.button("Rank Bacon"):
+    if st.button("Rank More"):
         st.session_state.current = 1
 
     if st.session_state.current != None:

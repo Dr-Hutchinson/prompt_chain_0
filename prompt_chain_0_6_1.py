@@ -1,7 +1,8 @@
-from langchain.llms import OpenAI
-from langchain.prompts import PromptTemplate
+#from langchain.prompts import PromptTemplate
 from langchain.prompts import FewShotPromptTemplate
 from langchain.chains import LLMChain
+from langchain import OpenAI, SerpAPIWrapper
+from langchain.agents import initialize_agent, Tool
 import openai
 import csv
 from datetime import datetime as dt
@@ -14,6 +15,7 @@ import streamlit as st
 import pygsheets
 from google.oauth2 import service_account
 import ssl
+import base64
 
 
 #scope = ['https://spreadsheets.google.com/feeds',
@@ -23,9 +25,10 @@ import ssl
                     #st.secrets["gcp_service_account"], scopes = scope)
 
 #gc = pygsheets.authorize(custom_credentials=credentials)
+gc = pygsheets.authorize(service_file='C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\credentials.json')
+
 
 #pygsheets credentials for Google Sheets API
-gc = pygsheets.authorize(service_file='C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\credentials.json')
 
 
 st.set_page_config(
@@ -34,31 +37,44 @@ st.set_page_config(
     page_icon='🔍'
 )
 
-os.environ["OPENAI_API_KEY"] = "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"
+#os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
+#openai.api_key = os.getenv("OPENAI_API_KEY")
+
+os.environ["OPENAI_API_KEY"] = "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"
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+
+
 st.title("Ask A Source: Thomas More's 'The History of Richard III'")
-col1, col2 = st.columns([3.0,3.5])
+col1, col2 = st.columns([3.0,3])
 with col1:
-    book_pic = st.image(image ='./more_page.jpg', caption="From Thomas More's 'History of Richard III' (1557). British Library.", width=500)
+    #book_pic = st.image(image ='./more_page.jpg', caption="From Thomas More's 'History of Richard III' (1557). British Library.", width=500)
     #st.write("Explore the current data.")
     #df = pd.read_csv('richardbot1_data.csv')
     #st.dataframe(df, height=500)
+    st.markdown("""
+    <embed src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="800" height="800">
+    """, unsafe_allow_html=True)
+
+        #st_display_pdf("C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\annotated_full_text.pdf")
 
 def button_one():
     st.write("This application uses GPT-3 to answer questions about Thomas More's [_History of King Richard III_](https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf). Choose one of the options below, and pose a question about the text.")
-
     semantic_search = "Semantic Search: Enter a question, and recieve sections of the text that are the most closely related."
+    ask_a_paragraph = "Ask a Paragraph: Select a Section from the text, and then pose a question. GPT-3 will search the internet answer your question."
     ask_a_source = "Ask A Source: Pose a question about the text, and GPT-3 will share answers drawn from the text along with historical analysis."
 
-    search_method = st.radio("Choose a method:", (semantic_search, ask_a_source))
+
+    search_method = st.radio("Choose a method:", (semantic_search, ask_a_paragraph, ask_a_source))
+    section_number = st.number_input('Select a section number if you have selected Ask a Paragraph. You can find the section numbers either through semantic search, or via this link.')
     submission_text = st.text_area("Enter your question below. ")
-    submit_button_1 = st.button(label='Click here to submit your question. It can take a minute for me to reflect, so I beg your patience as I consider your inquiry.')
+    submit_button_1 = st.button(label='Click here to submit your question.')
     if submit_button_1:
-        os.environ["OPENAI_API_KEY"] = "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"
+        #os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
+        os.environ["OPENAI_API_KEY"] = "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"
 
         def embeddings_search():
-            datafile_path = "C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\more_index_embeddings.csv"
+            datafile_path = "./more_index_embeddings.csv"
             df = pd.read_csv(datafile_path)
             df["babbage_search"] = df.babbage_search.apply(eval).apply(np.array)
 
@@ -116,13 +132,150 @@ def button_one():
                 st.write(row['similarities'])
                 st.write(row['combined'])
 
-                #st.write(row['final_analysis'])
-                #st.markdown("Biographical Identification: \n\n" + row['final_output_results'])
+                #st.write(row['initial_analysis'])
+                #st.markdown("Biographical Identification: \n\n" + row['final_analysis'])
+
+
+        def self_ask_with_search():
+
+            df = pd.read_csv(datafile_path, encoding='latin1')
+            section_select = r"Summary: Section_{}(:|$)".format(section_number)
+            result = df[df['combined'].str.contains(search_term, regex=True)]
+
+            if not result.empty:
+              # Select the 'combined' column of the result DataFrame
+              result = result.loc[:, 'combined']
+
+                    # Do something with the resulting cell value
+              section = result.iloc[0]
+
+
+            # self-search experiment 0.3 - revised question prompt examples
+            dertford_question = "2. Text:\nSummary: Section_0: King Edward IV died in 1483, leaving behind seven children. Edward, the eldest, was 13 years old at the time of his father's death. Richard, the second son, was two years younger. Elizabeth, Cecily, Brigette, Anne, and Katherine were the King's daughters. Elizabeth was later married to King Henry VII, and Anne was married to Thomas Howard, Earl of Surrey. Katherine was the last of the King's children to marry, and she eventually married a man of wealth. Text: Section_0: King Edward of that name the Fourth, after he had lived fifty and three years, seven months, and six days, and thereof reigned two and twenty years, one month, and eight days, died at Westminster the ninth day of April, the year of our redemption, a thousand four hundred four score and three, leaving much fair issue, that is, Edward the Prince, thirteen years of age; Richard Duke of York, two years younger; Elizabeth, whose fortune and grace was after to be queen, wife unto King Henry the Seventh, and mother unto the Eighth; Cecily not so fortunate as fair; Brigette, who, representing the virtue of her whose name she bore, professed and observed a religious life in Dertford, a house of cloistered Nuns; Anne, who was after honorably married unto Thomas, then Lord Howard and after Earl of Surrey; and Katherine, who long time tossed in either fortune, sometime in wealth, often in adversity, at the last, if this be the last, for yet she lives, is by the goodness of her nephew, King Henry the Eighth, in very prosperous state, and worthy her birth and virtue.\n3. Object of the Question: The religious order associated with Dertford\n4. Historical Context: 15th century England\n5. Revised User Question: What was the religious order associated with Dertford in 15th century England?\nExcellent, let's try another."
+            ludlow_question = "2. Text:\nSummary: Section_17: After King Edward IV's death, his son Prince Edward moved towards London. He was accompanied by Sir Anthony Woodville, Lord Rivers, and other members of the queen's family. Text: Section_17: As soon as the King was departed, that noble Prince his son drew toward London, who at the time of his father's death kept household at Ludlow in Wales. Such country, being far off from the law and recourse to justice, was begun to be far out of good will and had grown up wild with robbers and thieves walking at liberty uncorrected. And for this reason the Prince was, in the life of his father, sent thither, to the end that the authority of his presence should restrain evilly disposed persons from the boldness of their former outrages. To the governance and ordering of this young Prince, at his sending thither, was there appointed Sir Anthony Woodville, Lord Rivers and brother unto the Queen, a right honorable man, as valiant of hand as politic in counsel. Adjoined were there unto him others of the same party, and, in effect, every one as he was nearest of kin unto the Queen was so planted next about the Prince.\n3. Object of the Question: The status of Ludlow as a castle\n4. Historical Context: 15th century England\n5. Revised User Question: Was Ludlow a castle in 15th century England, and if so, what was its purpose?\nExcellent, let's try another."
+            malmsey_question = "2. Text\nSummary: Section_7: George, Duke of Clarence, was accused of treason and sentenced to death. He was drowned in a butt of malmesey, and his death was piteously bewailed by King Edward IV. Text: Section_7: George, Duke of Clarence, was a goodly noble prince, and at all points fortunate, if either his own ambition had not set him against his brother, or the envy of his enemies had not set his brother against him. For were it by the Queen and the lords of her blood, who highly maligned the King's kindred (as women commonly, not of malice but of nature, hate them whom their husbands love), or were it a proud appetite of the Duke himself intending to be king, in any case, heinous treason was there laid to his charge, and, finally, were he faulty or were he faultless, attainted was he by Parliament and judged to the death, and thereupon hastily drowned in a butt of malmesey, whose death, King Edward (although he commanded it), when he knew it was done, piteously bewailed and sorrowfully repented.\n3. Object of the Question: The nature and use of a butt of malmsey\n4. Historical Context: 15th century England\n5. Revised User Question: In 15th century England, what was a butt of malmsey and how was it used?\nExcellent. Let's try another."
+            seal_question = "2. Text\nSummary: Section_33: At a council meeting, Duke of Gloucester is made Protector and Archbishop of York is reproved. The Lord Chamberlain and some others keep their offices. Text: Section_33: But the Duke of Gloucester bore himself in open sight so reverently to the Prince, with all semblance of lowliness, that from the great obloquy in which he was so late before, he was suddenly fallen in so great trust, that at the Council next assembled, he was the only man chosen and thought most suitable to be Protector of the King and his realm, so that were it destiny or were it folly the lamb was given to the wolf to keep. At which Council also the Archbishop of York, Chancellor of England, who had delivered up the Great Seal to the Queen, was thereof greatly reproved, and the Seal taken from him and delivered to Doctor Russell, Bishop of Lincoln, a wise man and good and of much experience, and one of the best learned men undoubtedly that England had in his time. Diverse lords and knights were appointed unto diverse offices. The Lord Chamberlain and some others kept still their offices that they had before.\n3. Object of the Question: The purpose and function of the Great Seal\n4. Specify the Historical Context of the Text and User Question: The text is describing events that took place in the late 15th century in England.\n5. Compose a Revised Question: What was the Great Seal in late 15th century England?\nExcellent, let's try another."
+            anjou_question = "2. Text:\nSummary: Section_6: Richard, Duke of York, a noble man and a mighty, had begun not by war but by law to challenge the crown, putting his claim into the Parliament. There his cause was either for right or favor so far forth advanced that King Henry (although he had a goodly prince [Edward, son by Margaret of Anjou]) utterly rejected his own blood ; the crown was by authority of Parliament entailed unto the Duke of York, and his male issue in remainder, immediately after the death of King Henry. But the Duke, not enduring so long to tarry, but intending under pretext of dissension and debate arising in the realm, to reign before his time and to take upon him the rule in King Henry's life, was with many nobles of the realm at Wakefield slain, leaving three sons Edward, George, and Richard.\n3. Object of the Question: Margaret of Anjou's identity and role or position\n4. Historical Context: 15th century England\n5. Revised User Question: Who was Margaret of Anjou in 15th century England?\nExcellent. Let's try another."
+
+            # # self-search experiment 0.3 - revised question prompt template
+            examples = [
+                {"question": "1. User Question: What religious order was associated with Dertford?", "output": dertford_question},
+                {"question": "1. User Question: Was Ludlow a castle?", "output": ludlow_question},
+                {"question": "1. User Question: What is a butt of malmesey?", "output": malmsey_question},
+                {"question": "1. User Question: What is the Great Seal?", "output": seal_question},
+                {"question": "1. User Question: Who was Margaret of Anjou?", "output": anjou_question},
+            ],
+            # This how we specify how the example should be formatted.
+            example_prompt = PromptTemplate(
+                input_variables=["question"],
+                template="question: {question}",
+            )
+
+            # # self-search experiment 0.3 - revised question prompt template
+            #don't delete
+
+            prompt_from_string_examples5 = FewShotPromptTemplate(
+                # These are the examples we want to insert into the prompt.
+                examples=examples,
+                # This is how we want to format the examples when we insert them into the prompt.
+                example_prompt=example_prompt,
+                # The prefix is some text that goes before the examples in the prompt.
+                # Usually, this consists of intructions.
+                prefix="You are an AI with expertise in Thomas More's 'History of Richard III' and the larger political, cultural, and social history of England during the War of the Roses. In this exercise you will be given a selected section of More's text (known as the Text), a User Question, and a Method for historically contextualizing and rephrasing the User Question.  The goal of this exercise is to use this information to revise the User Question for historical contextualization.\nHere is your Method. Let's take it step by step.\n1. User Question: You will first be given a question about the Text by the user.\n2. Text: You will then be given a section of the Text selected by a user.\n3. Object of the Question: Specify what the user is seeking to learn in the User Question.\n4. Specify the Historical Context of the Text and User Question: Consider the specific historical context of the Text and the User Question, such as the time period (e.g. late 15th century) or geographic location (England).\n5. Compose a Revised User Question: Adjust the User Question to reflect the historical context noted in the previous step, but maintain the Object of the Question as the main focus. Ideally the usual format of much revisions would be 'User Question' + 'Historical Context'.  For example, the question 'What was the capital of England' would be revised to 'What was the capital of England in 15th century England'. Adapt the User Question in a similar manner.\nLet's begin.",
+                # The suffix is some text that goes after the examples in the prompt.
+                # Usually, this is where the user input will go
+                suffix="Question: {question}\n3. Object of the Question\n",
+                # The input variables are the variables that the overall prompt expects.
+                input_variables=["question"],
+                # The example_separator is the string we will use to join the prefix, examples, and suffix together with.
+                example_separator="\n\n"
+            )
+
+            llm = OpenAI(model_name="text-davinci-003", max_tokens = 500, temperature=0.0)
+            chain1 = LLMChain(llm=llm, prompt=prompt_from_string_examples5)
+            knowledge_check = chain1.run(submission_text+section)
+
+            # pass on revised quesiton for search
+
+            lines = knowledge_check.split('\n')
+
+            # Search for the line that starts with "Compose a Revised User Question"
+            for i, line in enumerate(lines):
+              if line.startswith("5. Compose a Revised User Question"):
+                revised_question = lines[i+1]
+
+            llm = OpenAI(temperature=0)
+            search = SerpAPIWrapper()
+            tools = [
+                Tool(
+                    name="Intermediate Answer",
+                    func=search.run
+                )
+            ]
+
+            self_ask_with_search = initialize_agent(tools, llm, agent="self-ask-with-search", verbose=True, return_intermediate_steps=True)
+            init_reasoning = self_ask_with_search({"input": revised_question})
+
+            reasoning = ""
+            for i, step in enumerate(init_reasoning['intermediate_steps']):
+              action = step[0]
+              output = step[1]
+              reasoning += f"{action.tool_input}: {output}\n"
+
+            # final report prompt example
+
+            dertford_question = "2. Text:\nSummary: Section_0: King Edward IV died in 1483, leaving behind seven children. Edward, the eldest, was 13 years old at the time of his father's death. Richard, the second son, was two years younger. Elizabeth, Cecily, Brigette, Anne, and Katherine were the King's daughters. Elizabeth was later married to King Henry VII, and Anne was married to Thomas Howard, Earl of Surrey. Katherine was the last of the King's children to marry, and she eventually married a man of wealth. Text: Section_0: King Edward of that name the Fourth, after he had lived fifty and three years, seven months, and six days, and thereof reigned two and twenty years, one month, and eight days, died at Westminster the ninth day of April, the year of our redemption, a thousand four hundred four score and three, leaving much fair issue, that is, Edward the Prince, thirteen years of age; Richard Duke of York, two years younger; Elizabeth, whose fortune and grace was after to be queen, wife unto King Henry the Seventh, and mother unto the Eighth; Cecily not so fortunate as fair; Brigette, who, representing the virtue of her whose name she bore, professed and observed a religious life in Dertford, a house of cloistered Nuns; Anne, who was after honorably married unto Thomas, then Lord Howard and after Earl of Surrey; and Katherine, who long time tossed in either fortune, sometime in wealth, often in adversity, at the last, if this be the last, for yet she lives, is by the goodness of her nephew, King Henry the Eighth, in very prosperous state, and worthy her birth and virtue.\n3.Object of the Question: The religious order associated with Dertford\n4. Historical Context: 15th century England\n5. Revised User Question: What was the religious order associated with Dertford in 15th century England?\n6. Research Summary: \nWhat is Dertford?: Dartford is the principal town in the Borough of Dartford, Kent, England. It is located 18 miles south-east of Central London and is situated adjacent to the London Borough of Bexley to its west. To its north, across the Thames estuary, is Thurrock in Essex, which can be reached via the Dartford Crossing.\nWhat religious order was associated with Dartford in the 15th century?: The priory of Dartford was the only house of Dominican nuns, or ' Sisters of the Order of St. Augustine according to the institutes and under the care of ...\n7. Research Summary Answer: The Order of St. Augustine\n8.Final Report: Answer: In 15th century England, the religious order associated with Dertford was the Dominicans, also known as the Order of Preachers.\nConfidence Level: Medium\nDetails: In Thomas More's 'History of Richard III', it is mentioned that Brigette, one of King Edward IV's daughters, 'professed and observed a religious life in Dertford, a house of cloistered Nuns.' This information is supported by research which indicates that Dertford was a town located in Kent, England and that it was home to a number of religious institutions, including nunneries. However, it is also possible that the 'house of cloistered Nuns' referred to in the text was actually a convent of Dominican friars, as research indicates that Dertford had a Dominican convent during this time period. The Dominicans were a Catholic religious order founded by Saint Dominic in the early 13th century, and they were known for their commitment to preaching and teaching the Gospel. It is possible that the Dominicans, who were not traditionally associated with cloistered communities, adopted the term 'cloistered Nuns' to describe their convent in Dertford. It is important to note that the text does not specify the religious order to which Brigette belonged, so this assumption is based on the information available about the Dominicans in Dertford and the possibility that the reference to 'cloistered Nuns' may not be literal.\nExcellent, let's try another."
+            ludlow_question = "2. Text\nSummary: Section_17: After King Edward IV's death, his son Prince Edward moved towards London. He was accompanied by Sir Anthony Woodville, Lord Rivers, and other members of the queen's family. Text: Section_17: As soon as the King was departed, that noble Prince his son drew toward London, who at the time of his father's death kept household at Ludlow in Wales. Such country, being far off from the law and recourse to justice, was begun to be far out of good will and had grown up wild with robbers and thieves walking at liberty uncorrected. And for this reason the Prince was, in the life of his father, sent thither, to the end that the authority of his presence should restrain evilly disposed persons from the boldness of their former outrages. To the governance and ordering of this young Prince, at his sending thither, was there appointed Sir Anthony Woodville, Lord Rivers and brother unto the Queen, a right honorable man, as valiant of hand as politic in counsel. Adjoined were there unto him others of the same party, and, in effect, every one as he was nearest of kin unto the Queen was so planted next about the Prince.\n3. Knowledge Report:\nPreliminary Answer: The Text does not mention whether Ludlow was a castle.\nConsider Details Needed to Answer the Question: Information about the physical characteristics and location of Ludlow.\nDetermine Your Knowledge of these Details: Low confidence.\nDetail Assessment: Insufficient detail for Answer.\nCompose a question for further research: Was Ludlow a castle in the late 15th century?\n4. Research Summary:\nWhere is Ludlow located?: Ludlow is a market town in Shropshire, England. The town is significant in the history of the Welsh Marches and in relation to Wales. It is located 28 miles …\nWas there a castle in Ludlow?: Throughout the 16th and 17th centuries, Ludlow Castle was held by the Crown, except for a brief time during the Civil War and the Commonwealth. It enjoyed great status as the centre of administration for the Marches shires and for Wales – court sessions and the Prince's Council were held here.\n5. Research Summary Answer: Yes, Ludlow was a castle in the late 15th century.\n6. Final Report with all three elements:\nAnswer: Ludlow was a castle in the late 15th century.\nConfidence Level: High\nDetails: Ludlow Castle was located in the market town of Shropshire, England. It was held by the Crown throughout the 16th and 17th centuries, except for a brief period during the Civil War and the Commonwealth. Ludlow Castle was known as the centre of administration for the Marches shires and Wales, and court sessions and the Prince's Council were held there. According to the Text, 'such country, being far off from the law and recourse to justice, was begun to be far out of good will and had grown up wild with robbers and thieves walking at liberty uncorrected. And for this reason the Prince was, in the life of his father, sent thither, to the end that the authority of his presence should restrain evilly disposed persons from the boldness of their former outrages.' (S.17) This suggests that Ludlow Castle was seen as a place of authority and order in a region that was prone to lawlessness.\nExcellent, let's try another."
+            seal_question = "2. Text\nSummary: Section_33: At a council meeting, Duke of Gloucester is made Protector and Archbishop of York is reproved. The Lord Chamberlain and some others keep their offices. Text: Section_33: But the Duke of Gloucester bore himself in open sight so reverently to the Prince, with all semblance of lowliness, that from the great obloquy in which he was so late before, he was suddenly fallen in so great trust, that at the Council next assembled, he was the only man chosen and thought most suitable to be Protector of the King and his realm, so that were it destiny or were it folly the lamb was given to the wolf to keep. At which Council also the Archbishop of York, Chancellor of England, who had delivered up the Great Seal to the Queen, was thereof greatly reproved, and the Seal taken from him and delivered to Doctor Russell, Bishop of Lincoln, a wise man and good and of much experience, and one of the best learned men undoubtedly that England had in his time. Diverse lords and knights were appointed unto diverse offices. The Lord Chamberlain and some others kept still their offices that they had before.\n3. Object of the Question: What was the function and purpose of the Great Seal.\n4. Historical Context: The text is describing events that took place in the late 15th century in England.\n5. Revised Question: What was the Great Seal in late 15th century England?\n 6. Research Summary: \nWhat is the Great Seal?: The Great Seal is a principal national symbol of the United States. The phrase is used both for the physical seal itself, which is kept by the United States Secretary of State, and more generally for the design impressed upon it.\nWhat was the purpose of the Great Seal in 15th century England?: The seal meant that the monarch did not need to sign every official document in person; authorisation could be carried out instead by an appointed officer. In centuries when few people could read or write, the seal provided a pictorial expression of Royal approval which all could understand.\n7. Research Summary Answer: The Great Seal was used to authorize documents on behalf of the monarch in 15th century England.\n8. Final Report:\nAnswer: In late 15th century England, the Great Seal was used to authorize documents on behalf of the monarch.\nConfidence Level: High\nDetails: The research summary states that the Great Seal was a symbol of national importance used to authorize documents in the absence of the monarch's personal signature. This information is supported by the text, which mentions that 'the Archbishop of York, Chancellor of England, who had delivered up the Great Seal to the Queen, was thereof greatly reproved, and the Seal taken from him and delivered to Doctor Russell, Bishop of Lincoln, a wise man and good and of much experience.' (S.33) This suggests that the Great Seal held significant power and authority and was entrusted to those who were responsible for carrying out the monarch's wishes. The transfer of the Great Seal from the Archbishop of York to Doctor Russell further emphasizes the importance of the seal and its role in the authorization of official documents.\nExcellent. Let's try another."
+            anjou_question = "2. Text:\nSummary: Section_6: Richard, Duke of York, was killed in battle at Wakefield, leaving behind three sons: Edward, George, and Richard. Edward IV then usurped the crown. Text: Section_6: Richard, Duke of York, a noble man and a mighty, had begun not by war but by law to challenge the crown, putting his claim into the Parliament. There his cause was either for right or favor so far forth advanced that King Henry (although he had a goodly prince [Edward, son by Margaret of Anjou]) utterly rejected his own blood ; the crown was by authority of Parliament entailed unto the Duke of York, and his male issue in remainder, immediately after the death of King Henry. But the Duke, not enduring so long to tarry, but intending under pretext of dissension and debate arising in the realm, to reign before his time and to take upon him the rule in King Henry's life, was with many nobles of the realm at Wakefield slain, leaving three sons Edward, George, and Richard.\n3. Knowledge Report:\nPreliminary Answer: Margaret of Anjou was the queen consort of King Henry VI of England.\nConsider Details Needed to Answer the Question: None.\nDetermine Your Knowledge of these Details: High.\nDetail Assessment: Sufficient detail for Answer.\nAnswer: Margaret of Anjou was the queen consort of King Henry VI of England.\nCompose a question for further research: What role did Margaret of Anjou play in the Wars of the Roses and the succession of the English throne?\n4. Research Summary:\nWho was Margaret of Anjou?: Margaret of Anjou was Queen of England and nominally Queen of France by marriage to King Henry VI from 1445 to 1461 and again from 1470 to 1471. Born in the Duchy of Lorraine into the House of Valois-Anjou, Margaret was the second eldest daughter of René, King of Naples, and Isabella, Duchess of Lorraine.\nWhat role did Margaret of Anjou play in the Wars of the Roses?: Margaret of Anjou was one of the major players in the Wars of the Roses. She often led the Lancastrian forces during the wars and dictated grand strategy. She battled her arch enemy Richard, duke of York over the royal succession and unsuccessful tried to place her son, Edward, on the throne.\nWhat role did Margaret of Anjou play in the succession of the English throne?: Margaret took the lead in attempting to restore the house of Lancaster to the throne. From Scotland, she sought assistance from nobles there and sent envoys to France. In England there remained some nobles who were loyal to Henry and the Lancastrian cause.\n5. Research Summary Answer: Margaret of Anjou was one of the major players in the Wars of the Roses and attempted to restore the house of Lancaster to the throne by seeking assistance from nobles in Scotland and France and rallying those who remained loyal to Henry and the Lancastrian cause.\n6. Final Report with all three elements:\nAnswer: Margaret of Anjou was Queen of England and nominally Queen of France by marriage to King Henry VI. She played a major role in the Wars of the Roses and attempted to restore the house of Lancaster to the throne.\nConfidence: High\nDetails: More's Text states that Richard, Duke of York, ‘began not by war but by law to challenge the crown, putting his claim into the Parliament.’ (S. 6) In Parliament, his cause ‘was either for right or favor so far forth advanced that King Henry (although he had a goodly prince [Edward, son by Margaret of Anjou]) utterly rejected his own blood.’ (S.6) This demonstrates the importance of Margaret and her son in the succession struggle and conflict with the house of York. The Text also mentions that the crown was ‘by authority of Parliament entailed unto the Duke of York, and his male issue in remainder, immediately after the death of King Henry.’ (S.6) Margaret attempted to restore the house of Lancaster to the throne and played a prominent role in the Wars of the Roses, leading the Lancastrian forces and dictating grand strategy. She fought against her arch enemy Richard, Duke of York, in an effort to place her son Edward on the throne. In her quest to reclaim the throne, Margaret sought support from nobles in Scotland and sent envoys to France. There were still some nobles in England who remained loyal to Henry and the Lancastrian cause."
+
+            # final answer prompt template
+            examples = [
+                {"question": "1. Question: What religious order was associated with Dertford?", "output": dertford_question},
+                {"question": "1. Question: Who was Margaret of Anjou?\n", "output": anjou_question},
+                {"question": "1. Question: Was Ludlow a castle?\n", "output": ludlow_question},
+                {"question": "1. Question: Was was the Great Seal?\n", "output": seal_question},
+            ],
+            # This how we specify how the example should be formatted.
+            example_prompt = PromptTemplate(
+                input_variables=["question"],
+                template="question: {question}",
+            )
+
+            # final answer prompt template
+            #don't delete
+
+            prompt_from_string_examples6 = FewShotPromptTemplate(
+                # These are the examples we want to insert into the prompt.
+                examples=examples,
+                # This is how we want to format the examples when we insert them into the prompt.
+                example_prompt=example_prompt,
+                # The prefix is some text that goes before the examples in the prompt.
+                # Usually, this consists of intructions.
+                prefix="You are an AI with expertise in Thomas More's 'History of Richard III' and the larger political, cultural, and social history of England during the War of the Roses. In this exercise you will be given a researcher's process for obtaining information to answer questions about More's Text. Your job is to compose a final report based on the information obtained by the researcher. You will compose this report based on the Method below.\nHere is your Method. Let's take it step by step.\n1. User Question: A question about the Text by a user.\n2. Text: A section of the Text selected by a user.\n3. Object of the Question: What the user is seeking to learn in the User Question.\n4. Historical Context of the Text and User Question:  The specific historical context of the Text and the User Question, such as the time period (e.g. late 15th century) or geographic location (England).\n5. Revised User Question: A revised version of the User Question adapted to the historical context identified above.\n6. Research Summary: A summary of outside research conducted by the researcher to provide more detail to answer the Revised User Question. This summary contains sub-questions composed by the researcher to answer the Revised User Question, and a summary of information the researcher uncovered in exploring these sub-questions.\n7. Research Summary Answer: The researcher's proposed answer to the Revised User Question based on the information contained in the Research Summary.\n8. Final Report: You mission is to compose a Final Report based on information in the Research Summary and the Text. This report is distinct and different from the Revised User Question. The Final Report includes three elements: an Answer to the User Question, confidence level in the answer (high, medium, low), and a Details section outlining the evidence and connecting it with a supporting quote from the Text. To be complete the Final Report must contain all three of these elements, and it is important to complete the Final Report.",
+                # The suffix is some text that goes after the examples in the prompt.
+                # Usually, this is where the user input will go
+                suffix="Question: {question}\8. Final Report\n",
+                # The input variables are the variables that the overall prompt expects.
+                input_variables=["question"],
+                # The example_separator is the string we will use to join the prefix, examples, and suffix together with.
+                example_separator="\n\n"
+            )
+
+            llm = OpenAI(model_name="text-davinci-003", max_tokens = 1000, temperature=0.0)
+            chain2 = LLMChain(llm=llm, prompt=prompt_from_string_examples6)
+            final_answer = chain2.run(submission_text + "\n" + section + "\n3. Object of the Question\n" + knowledge_check + "\n6. Research Summary\n" + reasoning + "\n7. Research Summary Answer:\n" + output)
+            st.write()
+
 
 
         if search_method == semantic_search:
             embeddings_search()
+        if search_method == self_ask_with_search:
+            self_ask_with_search()
         else:
+            st.header("GPT-3's analysis is underway. It can take a minute or two for every step of the process to be completed. GPT-3's progress will be documented below.")
+
                             ### embeddings search
                 #begin code
 
@@ -132,7 +285,7 @@ def button_one():
                 #cell for running OpenAI embeddings on csv file.
 
                 #datafile_path = "./more_index_embeddings.csv"  # for your convenience, we precomputed the embeddings
-            datafile_path = "C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\more_index_embeddings.csv"
+            datafile_path = "./more_index_embeddings.csv"
             df = pd.read_csv(datafile_path)
             df["babbage_search"] = df.babbage_search.apply(eval).apply(np.array)
 
@@ -171,10 +324,11 @@ def button_one():
             similarity3 = results_df.iloc[2]["similarities"]
             combined3 = results_df.iloc[2]["combined"]
 
+            st.write("Step 1 complete - identified the most semantically similar text sections.")
                 # Write the DataFrame to a CSV file
-            results_df.to_csv('results_df.csv', index=False, columns=["similarities", "combined"])
+            #results_df.to_csv('results_df.csv', index=False, columns=["similarities", "combined"])
                 #end code
-            st.write("Semantic search completed.")
+
                 ### few_shot examples for text relevance prompt
                 #relevance_check_w_similairities.0 (prompts w/ similarities & probability)
 
@@ -226,7 +380,7 @@ def button_one():
 
             ####combinesfunction for combining sections + outputs, and then filtering via regex for relevant sections
 
-
+            st.write("Step 2 complete - relevancy check completed.")
 
 
             # combined function for combining sections + outputs, and then filtering via regex for relevant sections
@@ -260,11 +414,9 @@ def button_one():
                 # Check if there are any rows in the relevant_df dataframe
             if relevant_df.empty:
                 # If there are no rows, print the desired message
-                st.write("No relevant sections identified. Here is GPT-3 analysis of those sections.")
+                st.header("GPT-3 determined that none of the selected text sections are relevant to your question. Here is GPT-3's analysis of those sections.")
                 st.dataframe(combined_df)
             else:
-                st.write("Relevancy check completed.")
-
                 # Otherwise, continue with the rest of the script
                 def combine_strings(row):
                     return row['output'] + '\nKey Terms\n' + row['r_check']
@@ -286,10 +438,10 @@ def button_one():
                 output_dict = output_df.to_dict('records')
 
                 # Extract the values from the dictionary using a list comprehension
-                output_values = [d['output'] for d in output_dict]
+                relevant_texts = [d['output'] for d in output_dict]
 
                 # Print the output values to see the results
-                #st.write(output_values)
+                #st.write(relevant_texts)
 
                     ### final answer prompt example
                     # Answer w/ Quotation - version 0
@@ -337,22 +489,21 @@ def button_one():
                 llm = OpenAI(model_name="text-davinci-003", max_tokens = 750, temperature=0.0)
                 chain = LLMChain(llm=llm, prompt=prompt_from_string_examples)
 
-                # Create an empty list to store the final_analysis results
-                final_analysis_results = []
+                # Create an empty list to store the initial_analysis results
+                initial_analysis_results = []
 
-                # Iterate over the output_values list
-                for output_value in output_values:
-                    # Run the final_analysis step and store the result in a variable
-                    final_analysis = chain.run(submission_text+output_value)
-                    # Add the final_analysis result to the list
-                    final_analysis_results.append(final_analysis)
+                # Iterate over the relevant_texts list
+                for output_value in relevant_texts:
+                    # Run the initial_analysis step and store the result in a variable
+                    initial_analysis = chain.run(submission_text+output_value)
+                    # Add the initial_analysis result to the list
+                    initial_analysis_results.append(initial_analysis)
 
-                # Create a Pandas dataframe from the output_values list
-                final_analysis_df = pd.DataFrame({'output_values': output_values, 'final_analysis': final_analysis_results})
-                #final_analysis_df.to_csv('final_analysis.csv', index=False)
-                st.write("Initial analysis completed.")
+                # Create a Pandas dataframe from the relevant_texts list
+                initial_analysis_df = pd.DataFrame({'relevant_texts': relevant_texts, 'initial_analysis': initial_analysis_results})
+                #initial_analysis_df.to_csv('initial_analysis.csv', index=False)
 
-
+                st.write("Step 3 complete - initial anaylsis finished. One final step remaining.")
                 # Save the dataframe to a CSV file
 
                 # final answer prompt, version 0 - includes biographical, context, and final answer with supporting quote.
@@ -401,30 +552,31 @@ def button_one():
 
 
 
-                # Load the final_analysis dataframe from the CSV file
-                df = final_analysis_df
-                final_output_results = []
-                output_values = []
+                # Load the initial_analysis dataframe from the CSV file
+                df = initial_analysis_df
                 final_analysis = []
+                relevant_texts = []
+                initial_analysis = []
 
                 # Iterate over the rows of the dataframe
                 for index, row in df.iterrows():
-                    # Get the values for the output_values and final_analysis columns for this row
-                    output_value = row['output_values']
-                    analysis = row['final_analysis']
+                    # Get the values for the relevant_texts and initial_analysis columns for this row
+                    output_value = row['relevant_texts']
+                    analysis = row['initial_analysis']
 
                     # Add the values to the lists
-                    output_values.append(output_value)
-                    final_analysis.append(analysis)
+                    relevant_texts.append(output_value)
+                    initial_analysis.append(analysis)
 
-                    # Run the final_analysis step using the values from the dataframe
+                    # Run the initial_analysis step using the values from the dataframe
                     final_output = chain.run(submission_text+output_value+analysis)
-                    final_output_results.append(final_output)
+                    final_analysis.append(final_output)
                     #print(final_output)
 
                 # Create the final_outputs_df dataframe using the updated lists
-                final_outputs_df = pd.DataFrame({'output_values': output_values, 'final_analysis': final_analysis, 'final_output_results': final_output_results})
-                st.dataframe(final_outputs_df)
+                final_outputs_df = pd.DataFrame({'relevant_texts': relevant_texts, 'initial_analysis': initial_analysis, 'final_analysis': final_analysis})
+                st.write("Step 4 completed - GPT'3 analysis is complete.")
+
                 # Save the dataframe to a CSV file
                 #final_outputs_df.to_csv('final_outputs.csv', index=False)
 
@@ -441,92 +593,31 @@ def button_one():
                   # Get the current row
                   row = final_outputs_df.iloc[i]
 
-                  expander_label = 'Answer ' + str(i) + ":"
-
                   # Create an expander for the current row, with the label set to the row number
-                  with st.expander(label=expander_label, expanded=True):
-                    # Display each cell in the row as a separate block of text
-                    with st.form(key=expander_label):
+                  with st.expander(label="Answer " + str(i+1) + ":", expanded=False):
+                    st.markdown("**Question:**")
+                    st.write(submission_text)
+                    st.markdown("**Below is GPT-3's analysis of a section of More's text that it found relevant to your qustion.**")
+                    section = row['relevant_texts']
+                    st.write(section)
+                    #st.write(row['initial_analysis'])
+                    analysis = "Biographical Identification " + row['final_analysis']
+                    st.markdown(analysis)
 
-                        st.markdown("**Question:**")
-                        st.write(submission_text)
-                        st.markdown("**Below is GPT-3's analysis of a section of More's text that it found relevant to your qustion.**")
-                        section = row['output_values']
-                        st.write(section)
-                        #st.write(row['final_analysis'])
-                        analysis = row['final_output_results']
-                        st.markdown("Biographical Identification: \n\n" + analysis)
-                        st.markdown("**Please rank GPT-3's response below to help improve the quality of these results.**")
-                        relevance_score = st.slider("Rank the Relevance of the Text Section to Your Question:", 0,5,  key=expander_label +'relevance')
-                        bio_score = st.slider("Rank the Biographical Identification:", 0,5, key=expander_label + "bio")
-                        context_score = st.slider("Rank the Historical Context:", 0,5, key=expander_label + 'context')
-                        final_answer_score = st.slider("Rank the Final Answer:", 0,5, key=expander_label + 'final_answer')
-                        ranking_submit = st.form_submit_button("Click here to submit rankings.")
+                    def initial_output_collection():
+                        now = dt.now()
+                        d1 = {'question':[submission_text], 'section':[section], 'analysis':[analysis], 'date':[now]}
+                        df1 = pd.DataFrame(data=d1, index=None)
+                        sh1 = gc.open('aas_more_outputs')
+                        wks1 = sh1[0]
+                        cells1 = wks1.get_all_values(include_tailing_empty_rows=False, include_tailing_empty=False, returnas='matrix')
+                        end_row1 = len(cells1)
+                        wks1.set_dataframe(df1,(end_row1+1,1), copy_head=False, extend=True)
 
-                        def initial_output_collection():
-                            now = dt.now()
-                            d1 = {'question':[submission_text], 'section':[section], 'analysis':[analysis], 'date':[now]}
-                            df1 = pd.DataFrame(data=d1, index=None)
-                            sh1 = gc.open('aas_more_outputs')
-                            wks1 = sh1[0]
-                            cells1 = wks1.get_all_values(include_tailing_empty_rows=False, include_tailing_empty=False, returnas='matrix')
-                            end_row1 = len(cells1)
-                            wks1.set_dataframe(df1,(end_row1+1,1), copy_head=False, extend=True)
+                    initial_output_collection()
 
-                        initial_output_collection()
-
-                        if ranking_submit:
-
-                            rank_submit = "Ranking submitted, thank you!"
-
-                            if 'rank_submit' not in st.session_state:
-                                st.session_state.rank_submit = rank_submit
-
-
-                            #def form_callback():
-                                #st.write(st.session_state.bio
-                                #st.write(st.session_state.context)
-
-                            #if 'submission_text' not in st.session_state:
-                                #st.session_state.submission_text = submission_text
-
-                            #if 'section' not in st.session_state:
-                                #st.session_state.section = section
-
-                            #if 'analysis' not in st.session_state:
-                                #st.session_state.analysis = Analysis
-
-                            #if 'relevance_score' not in st.session_state:
-                                #st.session_state.relevance_score = relevance_score
-
-                            #if 'bio_score' not in st.session_state:
-                                #st.session_state.bio_score = bio_score
-
-                            #if 'context_score' not in st.session_state:
-                                #st.session_state.context_score = context_score
-
-                            #if 'final_answer_score' not in st.session_state:
-                                #st.session_state.final_answer_score = final_answer_score
-
-                            sh1 = gc.open('aas_more_rankings')
-                            wks1 = sh1[0]
-                            df = wks1.get_as_df(has_header=True, index_column=None, start='A1', end=('K2'), numerize=False)
-                            now = dt.now()
-                            ranking_score = [st.session_state.relevance_score, st.session_state.bio_score, st.session_state.context_score, st.session_state.final_answer_score]
-                            ranking_average = mean(ranking_score)
-
-                            def ranking_collection():
-                                #d4 = {'user':["0"], 'user_id':[user_id],'question':[submission_text], 'output':[final_analysis], 'accuracy_score':[accuracy_score], 'text_score':[text_score],'interpretation_score':[interpretation_score], 'coherence':[coherence_rank], 'overall_ranking':[ranking_average], 'date':[now]}
-                                d4 = {'question':[st.session_state.submission_text], 'section':[st.session_state.section], 'analysis':[st.session_state.analysis], 'relevance_score':[st.session_state.relevance_score ], 'bio_score':[st.session_state.bio_score],'context_score':[st.session_state.context_score], 'final_answer_score':[st.session_state.final_answer_score], 'overall_ranking':[ranking_average], 'date':[now]}
-                                df4 = pd.DataFrame(data=d4, index=None)
-                                sh4 = gc.open('aas_more_rankings')
-                                wks4 = sh4[0]
-                                cells4 = wks4.get_all_values(include_tailing_empty_rows=False, include_tailing_empty=False, returnas='matrix')
-                                end_row4 = len(cells4)
-                                wks4.set_dataframe(df4,(end_row4+1,1), copy_head=False, extend=True)
-
-                            ranking_collection()
-                            st.write(st.session_state.rank_submit)
+                st.header("Below is GPT-3's chain-of-thought process for generating these respones.")
+                st.dataframe(final_outputs_df)
 
 def button_two():
     #Rank Bacon_bot Responses
@@ -541,7 +632,7 @@ def button_two():
         st.subheader('Your Question')
         st.write(submission_text)
         st.subheader("The AI's Answer:")
-        st.write(final_analysis)
+        st.write(initial_analysis)
         st.subheader("The AI's Interpretation:")
 
         with st.form('form2'):
@@ -558,7 +649,7 @@ def button_two():
                 df = wks1.get_as_df(has_header=True, index_column=None, start='A1', end=('K2'), numerize=False)
                 name = df['user'][0]
                 submission_text = df['question'][0]
-                output = df['final_analysis'][0]
+                output = df['initial_analysis'][0]
                 combined_df = df['combined_df'][0]
                 relevant_texts = df['evidence'][0]
                 now = dt.now()
@@ -566,7 +657,7 @@ def button_two():
                 ranking_average = mean(ranking_score)
 
                 def ranking_collection():
-                    d4 = {'user':["0"], 'user_id':[user_id],'question':[submission_text], 'output':[final_analysis], 'accuracy_score':[accuracy_score], 'text_score':[text_score],'interpretation_score':[interpretation_score], 'coherence':[coherence_rank], 'overall_ranking':[ranking_average], 'date':[now]}
+                    d4 = {'user':["0"], 'user_id':[user_id],'question':[submission_text], 'output':[initial_analysis], 'accuracy_score':[accuracy_score], 'text_score':[text_score],'interpretation_score':[interpretation_score], 'coherence':[coherence_rank], 'overall_ranking':[ranking_average], 'date':[now]}
                     df4 = pd.DataFrame(data=d4, index=None)
                     sh4 = gc.open('AAS_rankings')
                     wks4 = sh4[0]
@@ -595,9 +686,9 @@ with col2:
 
         st.session_state.current = None
 
-    if st.button("Ask Bacon"):
+    if st.button("Ask More"):
         st.session_state.current = 0
-    if st.button("Rank Bacon"):
+    if st.button("Rank More"):
         st.session_state.current = 1
 
     if st.session_state.current != None:
