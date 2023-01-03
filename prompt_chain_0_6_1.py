@@ -24,9 +24,7 @@ scope = ['https://spreadsheets.google.com/feeds',
 credentials = service_account.Credentials.from_service_account_info(
                     st.secrets["gcp_service_account"], scopes = scope)
 
-
-
-#pygsheets credentials for Google Sheets API
+gc = pygsheets.authorize(custom_credentials=credentials)
 
 
 st.set_page_config(
@@ -34,9 +32,6 @@ st.set_page_config(
     layout='wide',
     page_icon='🔍'
 )
-
-#os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
-#openai.api_key = os.getenv("OPENAI_API_KEY")
 
 os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -628,7 +623,7 @@ def button_one():
 
         if search_method == semantic_search:
             embeddings_search()
-        if search_method == self_ask_with_search:
+        if search_method == ask_a_paragraph:
             self_ask_with_search()
         else:
             ask_a_source()
