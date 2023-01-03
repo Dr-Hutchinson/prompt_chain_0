@@ -54,10 +54,15 @@ with col1:
 
     #st.markdown(pdf_display, unsafe_allow_html=True)
 
-    st.markdown("""
-<embed src="https://drive.google.com/file/d/183HEt0tf0vu8qt0Kaft29eVPvlmHIkrf/view" width="400" height="400">
-""", unsafe_allow_html=True)
+    file_path = "./annotated_full_text.pdf"
 
+    def show_pdf(file_path):
+        with open(file_path,"rb") as f:
+              base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+        pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
+        st.markdown(pdf_display, unsafe_allow_html=True)
+
+    show_pdf("my_pdf.pdf")
 
         #st_display_pdf("C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\annotated_full_text.pdf")
 
