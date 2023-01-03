@@ -25,7 +25,7 @@ import base64
                     #st.secrets["gcp_service_account"], scopes = scope)
 
 #gc = pygsheets.authorize(custom_credentials=credentials)
-gc = pygsheets.authorize(service_file='C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\credentials.json')
+#gc = pygsheets.authorize(service_file='C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\credentials.json')
 
 
 #pygsheets credentials for Google Sheets API
@@ -40,7 +40,7 @@ st.set_page_config(
 #os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
 #openai.api_key = os.getenv("OPENAI_API_KEY")
 
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
@@ -70,9 +70,8 @@ def button_one():
     submission_text = st.text_area("Enter your question below. ")
     submit_button_1 = st.button(label='Click here to submit your question.')
     if submit_button_1:
-        #os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
-        os.environ["OPENAI_API_KEY"] = "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"
-
+        os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
+        
         def embeddings_search():
             datafile_path = "./more_index_embeddings.csv"
             df = pd.read_csv(datafile_path)
