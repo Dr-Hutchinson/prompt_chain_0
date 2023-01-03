@@ -649,7 +649,7 @@ def button_one():
 
         if search_method == semantic_search:
             embeddings_search()
-        if search_method == ask_a_paragraph:
+        elif search_method == ask_a_paragraph:
             self_ask_with_search()
         else:
             ask_a_source()
