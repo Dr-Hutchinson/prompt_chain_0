@@ -66,7 +66,7 @@ with col1:
 
         #st_display_pdf("C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\annotated_full_text.pdf")
     datafile_path = "./more_index_combined.csv"
-    df_indexed_text = pd.read_csv(datafile_path)
+    df_indexed_text = pd.read_csv(datafile_path, encoding='latin1')
     st.dataframe(df_indexed_text)
 
 
