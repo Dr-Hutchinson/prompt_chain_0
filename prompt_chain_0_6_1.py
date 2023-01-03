@@ -38,7 +38,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 os.environ["SERPAPI_API_KEY"] = st.secrets["serpapi_api_key"]
 
 st.title("Ask A Source: Thomas More's 'The History of Richard III'")
-col1, col2 = st.columns([3,2.5])
+col1, col2 = st.columns([2,3])
 with col1:
     #book_pic = st.image(image ='./more_page.jpg', caption="From Thomas More's 'History of Richard III' (1557). British Library.", width=500)
     #st.write("Explore the current data.")
@@ -49,7 +49,7 @@ with col1:
     #""", unsafe_allow_html=True)
     pdf_display = F'<iframe src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="700" height="1000" type="application/pdf"></iframe>'
     pdf_url = 'https://github.com/Dr-Hutchinson/prompt_chain_0/blob/main/annotated_full_text.pdf'
-    pdf_display = F'<iframe src="{pdf_url}" width="700" height="500" type="application/pdf"></iframe>'
+    pdf_display = F'<iframe src="{pdf_url}" width="1000" height="700" type="application/pdf"></iframe>'
     st.markdown(pdf_display, unsafe_allow_html=True)
 
     #file_path = "./annotated_full_text.pdf"
