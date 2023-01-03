@@ -52,17 +52,17 @@ with col1:
     pdf_display = F'<iframe src="{pdf_url}" width="700" height="700" type="application/pdf"></iframe>'
     st.markdown(pdf_display, unsafe_allow_html=True)
 
-    #file_path = "./annotated_full_text.pdf"
+    file_path = "./annotated_full_text.pdf"
 
-    #def show_pdf(file_path):
-        #with open(file_path,"rb") as f:
-             #base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-        #pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
-        #st.markdown(pdf_display, unsafe_allow_html=True)
+    def show_pdf(file_path):
+        with open(file_path,"rb") as f:
+             base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+        pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
+        st.markdown(pdf_display, unsafe_allow_html=True)
 
-    #show_pdf("./annotated_full_text.pdf")
+    show_pdf("./annotated_full_text.pdf")
 
-        #st_display_pdf("C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\annotated_full_text.pdf")
+        
 
     st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
     datafile_path = "./more_index_combined.csv"
