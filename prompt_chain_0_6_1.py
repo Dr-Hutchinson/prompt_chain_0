@@ -48,12 +48,15 @@ with col1:
     #<embed src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="800" height="800">
     #""", unsafe_allow_html=True)
     #pdf_display = F'<iframe src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="700" height="1000" type="application/pdf"></iframe>'
-    pdf_url = 'https://github.com/Dr-Hutchinson/prompt_chain_0/blob/main/annotated_full_text.pdf'
+    #pdf_url = 'https://github.com/Dr-Hutchinson/prompt_chain_0/blob/main/annotated_full_text.pdf'
 
-    pdf_display = F'<iframe src="{pdf_url}" width="700" height="1000" type="application/pdf"></iframe>'
+    #pdf_display = F'<iframe src="{pdf_url}" width="700" height="1000" type="application/pdf"></iframe>'
 
-    st.markdown(pdf_display, unsafe_allow_html=True)
+    #st.markdown(pdf_display, unsafe_allow_html=True)
 
+    st.markdown("""
+<embed src="https://drive.google.com/file/d/183HEt0tf0vu8qt0Kaft29eVPvlmHIkrf/view" width="400" height="400">
+""", unsafe_allow_html=True)
 
 
         #st_display_pdf("C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\annotated_full_text.pdf")
@@ -633,12 +636,6 @@ def button_one():
 
                 st.header("Below is GPT-3's chain-of-thought process for generating these respones.")
                 st.dataframe(final_outputs_df)
-
-
-
-
-
-
 
 
         if search_method == semantic_search:
