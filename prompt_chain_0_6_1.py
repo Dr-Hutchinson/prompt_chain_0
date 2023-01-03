@@ -53,7 +53,10 @@ with col1:
     #st.markdown("""
     #<embed src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="800" height="800">
     #""", unsafe_allow_html=True)
-    pdf_display = F'<iframe src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="700" height="1000" type="application/pdf"></iframe>'
+    #pdf_display = F'<iframe src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="700" height="1000" type="application/pdf"></iframe>'
+
+    pdf_url = 'https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf'
+    st.markdown(f'<iframe src="{pdf_url}" width="800" height="1000" type="application/pdf"></iframe>', unsafe_allow_html=True)
 
 
         #st_display_pdf("C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\annotated_full_text.pdf")
