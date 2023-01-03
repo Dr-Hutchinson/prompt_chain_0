@@ -18,14 +18,12 @@ import ssl
 import base64
 
 
-#scope = ['https://spreadsheets.google.com/feeds',
-             #'https://www.googleapis.com/auth/drive']
+scope = ['https://spreadsheets.google.com/feeds',
+             'https://www.googleapis.com/auth/drive']
 
-#credentials = service_account.Credentials.from_service_account_info(
-                    #st.secrets["gcp_service_account"], scopes = scope)
+credentials = service_account.Credentials.from_service_account_info(
+                    st.secrets["gcp_service_account"], scopes = scope)
 
-#gc = pygsheets.authorize(custom_credentials=credentials)
-#gc = pygsheets.authorize(service_file='C:\\Users\\danie\\Desktop\\AI_Art\\GPT-2\\history of richard iii\\Streamlit\\prompt_chain_0\\prompt_chain_0\\credentials.json')
 
 
 #pygsheets credentials for Google Sheets API
@@ -71,7 +69,7 @@ def button_one():
     submit_button_1 = st.button(label='Click here to submit your question.')
     if submit_button_1:
         os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
-        
+
         def embeddings_search():
             datafile_path = "./more_index_embeddings.csv"
             df = pd.read_csv(datafile_path)
