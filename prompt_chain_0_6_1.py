@@ -44,7 +44,7 @@ with col1:
     #st.write("Explore the current data.")
     #df = pd.read_csv('richardbot1_data.csv')
     #st.dataframe(df, height=500)
-    #st.markdown("""
+    st.markdown("""
     #<embed src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="800" height="800">
     #""", unsafe_allow_html=True)
     #pdf_display = F'<iframe src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="700" height="1000" type="application/pdf"></iframe>'
@@ -63,13 +63,13 @@ with col1:
     #show_pdf("./annotated_full_text.pdf")
 
     #file_path = './annotated_full_text.pdf'
-    def show_pdf(file_path):
-        with open(file_path,"rb") as f:
-                base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-        pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="800" type="application/pdf"></iframe>'
-        st.markdown(pdf_display, unsafe_allow_html=True)
+    #def show_pdf(file_path):
+        #with open(file_path,"rb") as f:
+                #base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+        #pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="800" type="application/pdf"></iframe>'
+        #st.markdown(pdf_display, unsafe_allow_html=True)
 
-    show_pdf('annotated_full_text.pdf')
+    #show_pdf('annotated_full_text.pdf')
 
     st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
     datafile_path = "./more_index_combined.csv"
