@@ -62,12 +62,13 @@ with col1:
 
     #show_pdf("./annotated_full_text.pdf")
     st.markdown(
-        """
-        <iframe src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="800" height="800">
-        </iframe>
-        """,
-        unsafe_allow_html=True,
-        )
+    """
+    <iframe src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="800" height="800" allow="fullscreen">
+    </iframe>
+    """,
+    unsafe_allow_html=True,
+    )
+
 
 
     st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
