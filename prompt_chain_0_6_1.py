@@ -99,7 +99,7 @@ with col1:
 
     base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
     pdf_display = f'<object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="700" height="1000"></object>'
-    st.markdown(pdf_display, unsafe_allow_html=True)
+    st.markdown(pdf_display, unsafe_allow_html=True, debug=True)
 
 
     st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
