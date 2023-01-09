@@ -54,20 +54,14 @@ with col1:
 
     #file_path = "./annotated_full_text.pdf"
 
-    #def show_pdf(file_path):
-        #with open(file_path,"rb") as f:
-             #base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-        #pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
-        #st.markdown(pdf_display, unsafe_allow_html=True)
+    def show_pdf(file_path):
+        with open(file_path,"rb") as f:
+             base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+        pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
+        st.markdown(pdf_display, unsafe_allow_html=True)
 
-    #show_pdf("./annotated_full_text.pdf")
-    st.markdown(
-    """
-    <iframe src="https://www.americanyawp.com/text/wp-content/uploads/Locke_American-Yawp_V1.pdf" width="800" height="800" allow="fullscreen">
-    </iframe>
-    """,
-    unsafe_allow_html=True,
-    )
+    show_pdf("./annotated_full_text.pdf")
+
 
 
 
