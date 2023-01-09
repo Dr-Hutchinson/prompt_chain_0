@@ -69,7 +69,7 @@ with col1:
         pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="800" type="application/pdf"></iframe>'
         st.markdown(pdf_display, unsafe_allow_html=True)
 
-    show_pdf('https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf')
+    show_pdf('annotated_full_text.pdf')
 
     st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
     datafile_path = "./more_index_combined.csv"
