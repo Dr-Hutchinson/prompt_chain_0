@@ -64,14 +64,33 @@ with col1:
     #show_pdf("./Richard_rm.pdf")
 
     #file_path = './annotated_full_text.pdf'
+
+    #begin here
+    #def show_pdf(file_path):
+        #with open(file_path,"rb") as f:
+                #base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+        #pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="800" type="application/pdf"></iframe>'
+        #st.markdown(pdf_display, unsafe_allow_html=True)
+
+    #show_pdf('./Richard_rm.pdf')
+
+
+    #file_path = './annotated_full_text.pdf'
+
+    #with open(file_path, "rb") as f:
+        #pdf_content = f.read()
+
+    #base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
+    #pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
+    #st.markdown(pdf_display, unsafe_allow_html=True)
+
     def show_pdf(file_path):
-        with open(file_path,"rb") as f:
-                base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-        pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="800" type="application/pdf"></iframe>'
+        with open(file_path, "rb") as f:
+            base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+        pdf_display = f'<object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="800" height="800"></object>'
         st.markdown(pdf_display, unsafe_allow_html=True)
 
     show_pdf('./Richard_rm.pdf')
-
 
     file_path = './annotated_full_text.pdf'
 
@@ -79,9 +98,8 @@ with col1:
         pdf_content = f.read()
 
     base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
-    pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
+    pdf_display = f'<object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="700" height="1000"></object>'
     st.markdown(pdf_display, unsafe_allow_html=True)
-
 
 
     st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
