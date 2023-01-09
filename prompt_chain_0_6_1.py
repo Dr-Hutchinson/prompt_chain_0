@@ -63,7 +63,7 @@ with col1:
     #show_pdf("./annotated_full_text.pdf")
     st.markdown(
     """
-    <iframe src="https://www.hup.harvard.edu/catalogs/hup-brochure-2012-world-history.pdf" width="800" height="800" allow="fullscreen">
+    <iframe src="https://www.americanyawp.com/text/wp-content/uploads/Locke_American-Yawp_V1.pdf" width="800" height="800" allow="fullscreen">
     </iframe>
     """,
     unsafe_allow_html=True,
