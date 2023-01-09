@@ -61,7 +61,7 @@ with col1:
         pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
         st.markdown(pdf_display, unsafe_allow_html=True)
 
-    show_pdf("./richard_rm.pdf")
+    show_pdf("./Richard_rm.pdf")
 
     #file_path = './annotated_full_text.pdf'
     #def show_pdf(file_path):
