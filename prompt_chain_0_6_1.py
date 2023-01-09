@@ -70,14 +70,17 @@ with col1:
         #st.markdown(pdf_display, unsafe_allow_html=True)
 
     #show_pdf('annotated_full_text.pdf')
+
+
     file_path = './annotated_full_text.pdf'
 
     with open(file_path, "rb") as f:
         pdf_content = f.read()
 
-    base64_pdf = base64.b64encode(pdf_content.read()).decode('utf-8')
+    base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
     pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
     st.markdown(pdf_display, unsafe_allow_html=True)
+
 
 
     st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
