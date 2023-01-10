@@ -80,7 +80,7 @@ with col1:
 
     file_path = './Richard-compressed.pdf'
 
-    url_path = 'https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf'
+    url_path = 'https://raw.githubusercontent.com/Dr-Hutchinson/prompt_chain_0/c2f3795f25683fb194e11072abb9d586964896a2/annotated_full_text.pdf'
 
     with open(file_path, "rb") as f:
         pdf_content = f.read()
