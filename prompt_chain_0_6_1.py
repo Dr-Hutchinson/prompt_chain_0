@@ -95,7 +95,7 @@ with col1:
         pdf_display = f'<iframe src="{pdf_url}" width="700" height="1000" type="application/pdf"></iframe>'
         st.markdown(pdf_display, unsafe_allow_html=True)
 
-        url = 'https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf'
+    url = 'https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf'
 
     response = requests.get(url)
     pdf_content = response.content
