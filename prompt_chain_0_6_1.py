@@ -83,6 +83,16 @@ with col1:
         base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
         pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
         st.markdown(pdf_display, unsafe_allow_html=True)
+    
+    with open(file_path, "rb") as f:
+        pdf_content = f.read()
+        base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
+        pdf_url = f'data:application/pdf;base64,{base64_pdf}'
+        pdf_display = f'<iframe src="{pdf_url}" width="700" height="1000" type="application/pdf"></iframe>'
+        st.markdown(pdf_display, unsafe_allow_html=True)
+
+
+
 
     #def show_pdf(file_path):
         #with open(file_path, "rb") as f:
