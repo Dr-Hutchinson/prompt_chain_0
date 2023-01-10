@@ -76,7 +76,7 @@ with col1:
     #show_pdf('./Richard_rm.pdf')
 
 
-    file_path = './annotated_full_text.pdf'
+    pdf_content = './annotated_full_text.pdf'
 
     with open(file_path, "rb") as f:
         #pdf_content = f.read()
