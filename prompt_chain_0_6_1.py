@@ -78,7 +78,7 @@ with col1:
     #show_pdf('./Richard_rm.pdf')
 
 
-    file_path = './Richard-compressed.pdf'
+    file_path = 'https://raw.githubusercontent.com/Dr-Hutchinson/prompt_chain_0/c2f3795f25683fb194e11072abb9d586964896a2/annotated_full_text.pdf'
 
     with open(file_path, "rb") as f:
         pdf_content = f.read()
