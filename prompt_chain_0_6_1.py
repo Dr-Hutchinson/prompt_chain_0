@@ -116,6 +116,8 @@ with col1:
     #pdf_display = f'<object data="{pdf_url}" type="application/pdf" width="700" height="700">'
     #st.markdown(pdf_display, unsafe_allow_html=True)
 
+    st.components.v1.iframe('https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf')
+
 
 
     st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
