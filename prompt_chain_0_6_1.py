@@ -78,7 +78,7 @@ with col1:
     #show_pdf('./Richard_rm.pdf')
 
 
-    file_path = './annotated_full_text.pdf'
+    file_path = './Richard-compressed.pdf'
 
     with open(file_path, "rb") as f:
         pdf_content = f.read()
@@ -116,26 +116,6 @@ with col1:
     #pdf_url = 'https://raw.githubusercontent.com/Dr-Hutchinson/prompt_chain_0/c2f3795f25683fb194e11072abb9d586964896a2/annotated_full_text.pdf'
     #pdf_display = f'<object data="{pdf_url}" type="application/pdf" width="700" height="700">'
     #st.markdown(pdf_display, unsafe_allow_html=True)
-
-    iframe = """
-    <iframe src="/path/to/pdf.js/web/viewer.html" width="1000" height="600"></iframe>
-    """
-    st.markdown(iframe, unsafe_allow_html=True)
-
-    # Send the URL of the PDF file to the iframe element
-    url = "https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf"
-    javascript = f"""
-    <script>
-    window.addEventListener('DOMContentLoaded', function() {{
-        var url = "{url}";
-        var iframe = document.querySelector('iframe');
-        iframe.src = '/path/to/pdf.js/web/viewer.html?file=' + encodeURIComponent(url);
-    }});
-    </script>
-    """
-    st.markdown(javascript, unsafe_allow_html=True)
-
-
 
     st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
     datafile_path = "./more_index_combined.csv"
