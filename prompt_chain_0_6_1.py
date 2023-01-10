@@ -102,6 +102,11 @@ with col1:
     #pdf_display = f'<object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="700" height="1000"></object>'
     #st.markdown(pdf_display, unsafe_allow_html=True)
 
+    pdf_url = 'https://raw.githubusercontent.com/Dr-Hutchinson/prompt_chain_0/c2f3795f25683fb194e11072abb9d586964896a2/annotated_full_text.pdf'
+    pdf_display = f'<object data="{pdf_url}" type="application/pdf" width="700" height="700">'
+    st.markdown(pdf_display, unsafe_allow_html=True)
+
+
 
     st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
     datafile_path = "./more_index_combined.csv"
