@@ -16,7 +16,8 @@ import pygsheets
 from google.oauth2 import service_account
 import ssl
 import base64
-import streamlit.components.v1 as components
+from IPython.display import Javascript
+
 
 
 scope = ['https://spreadsheets.google.com/feeds',
@@ -116,7 +117,23 @@ with col1:
     #pdf_display = f'<object data="{pdf_url}" type="application/pdf" width="700" height="700">'
     #st.markdown(pdf_display, unsafe_allow_html=True)
 
-    st.components.v1.iframe('https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf')
+    iframe = """
+    <iframe src="/path/to/pdf.js/web/viewer.html" width="1000" height="600"></iframe>
+    """
+    st.markdown(iframe, unsafe_allow_html=True)
+
+    # Send the URL of the PDF file to the iframe element
+    url = "https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf"
+    javascript = f"""
+    <script>
+    window.addEventListener('DOMContentLoaded', function() {{
+        var url = "{url}";
+        var iframe = document.querySelector('iframe');
+        iframe.src = '/path/to/pdf.js/web/viewer.html?file=' + encodeURIComponent(url);
+    }});
+    </script>
+    """
+    st.markdown(javascript, unsafe_allow_html=True)
 
 
 
