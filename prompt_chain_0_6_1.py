@@ -108,13 +108,13 @@ with col1:
     st.markdown(pdf_display, unsafe_allow_html=True)
 
 
-    #def show_pdf(file_path):
-        #with open(file_path, "rb") as f:
-            #base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-        #pdf_display = f'<object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="800" height="800"></object>'
-        #st.markdown(pdf_display, unsafe_allow_html=True)
+    def show_pdf(file_path):
+        with open(file_path, "rb") as f:
+            base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+        pdf_display = f'<object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="800" height="800"></object>'
+        st.markdown(pdf_display, unsafe_allow_html=True)
 
-    #show_pdf('./Richard_rm.pdf')
+    show_pdf('./Richard-compressed.pdf')
 
     #file_path = './annotated_full_text.pdf'
 
