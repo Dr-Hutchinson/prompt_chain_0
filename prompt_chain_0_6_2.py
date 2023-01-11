@@ -224,10 +224,10 @@ def button_one():
             ]
 
             llm = OpenAI(temperature=0, model_name="text-davinci-003")
-            react = initialize_agent(tools, llm, agent="react-docstore", verbose=True)
+            react = initialize_agent(tools, llm, agent="react-docstore", verbose=True, return_intermediate_steps=True)
 
             #question = "What was the political significance of Richard III being described as both king of England and France in late 15th century England?"
-            init_reasoning = react.run(revised_question)
+            init_reasoning = react({"input": revised_question})
 
             reasoning = ""
             for i, step in enumerate(init_reasoning['intermediate_steps']):
