@@ -1,8 +1,9 @@
 from langchain.prompts import PromptTemplate
 from langchain.prompts import FewShotPromptTemplate
 from langchain.chains import LLMChain
-from langchain import OpenAI, SerpAPIWrapper
+from langchain import OpenAI, SerpAPIWrapper, Wikipedia
 from langchain.agents import initialize_agent, Tool
+from langchain.agents.react.base import DocstoreExplorer
 import openai
 import csv
 from datetime import datetime as dt
@@ -40,68 +41,6 @@ os.environ["SERPAPI_API_KEY"] = st.secrets["serpapi_api_key"]
 st.title("Ask A Source: Thomas More's 'The History of Richard III'")
 col1, col2 = st.columns([3,3])
 with col1:
-    #book_pic = st.image(image ='./more_page.jpg', caption="From Thomas More's 'History of Richard III' (1557). British Library.", width=500)
-    #st.write("Explore the current data.")
-    #df = pd.read_csv('richardbot1_data.csv')
-    #st.dataframe(df, height=500)
-    #st.markdown("""
-    #<embed src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="800" height="800">
-    #""", unsafe_allow_html=True)
-    #pdf_display = F'<iframe src="https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf" width="700" height="1000" type="application/pdf"></iframe>'
-    #pdf_url = 'https://github.com/Dr-Hutchinson/prompt_chain_0/blob/main/annotated_full_text.pdf'
-    #pdf_url = 'https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf'
-    #pdf_display = F'<iframe src="{pdf_url}" width="700" height="700" type="application/pdf"></iframe>'
-    #st.markdown(pdf_display, unsafe_allow_html=True)
-
-    #file_path = "./annotated_full_text.pdf"
-
-    #def show_pdf(file_path):
-        #with open(file_path,"rb") as f:
-            #base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-        #pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="100" height="100" type="application/pdf">'
-        #st.markdown(pdf_display, unsafe_allow_html=True)
-
-    #show_pdf("./Richard_rm.pdf")
-
-    #file_path = './annotated_full_text.pdf'
-
-    #begin here
-    #def show_pdf(file_path):
-        #with open(file_path,"rb") as f:
-                #base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-        #pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="800" type="application/pdf"></iframe>'
-        #st.markdown(pdf_display, unsafe_allow_html=True)
-
-    #show_pdf('./Richard_rm.pdf')
-
-
-    #file_path = './annotated_full_text.pdf'
-
-    #with open(file_path, "rb") as f:
-        #pdf_content = f.read()
-
-    #base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
-    #pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
-    #st.markdown(pdf_display, unsafe_allow_html=True)
-
-    def show_pdf(file_path):
-        with open(file_path, "rb") as f:
-            base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-        pdf_display = f'<object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="800" height="800"></object>'
-        st.markdown(pdf_display, unsafe_allow_html=True)
-
-    show_pdf('./Richard_rm.pdf')
-
-    file_path = './annotated_full_text.pdf'
-
-    with open(file_path, "rb") as f:
-        pdf_content = f.read()
-
-    base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
-    pdf_display = f'<object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="700" height="1000"></object>'
-    st.markdown(pdf_display, unsafe_allow_html=True)
-
-
     st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
     datafile_path = "./more_index_combined.csv"
     df_indexed_text = pd.read_csv(datafile_path, encoding='latin1')
@@ -258,17 +197,37 @@ def button_one():
               if line.startswith("5. Compose a Revised User Question"):
                 revised_question = lines[i+1]
 
-            llm = OpenAI(temperature=0)
-            search = SerpAPIWrapper()
+            #begin SerpAPI section - commented out
+
+            #llm = OpenAI(temperature=0)
+            #search = SerpAPIWrapper()
+            #tools = [
+                #Tool(
+                    #name="Intermediate Answer",
+                    #func=search.run
+                #)
+            #]
+
+            #self_ask_with_search = initialize_agent(tools, llm, agent="self-ask-with-search", verbose=True, return_intermediate_steps=True)
+            #init_reasoning = self_ask_with_search({"input": revised_question})
+
+            docstore=DocstoreExplorer(Wikipedia())
             tools = [
                 Tool(
-                    name="Intermediate Answer",
-                    func=search.run
+                    name="Search",
+                    func=docstore.search
+                ),
+                Tool(
+                    name="Lookup",
+                    func=docstore.lookup
                 )
             ]
 
-            self_ask_with_search = initialize_agent(tools, llm, agent="self-ask-with-search", verbose=True, return_intermediate_steps=True)
-            init_reasoning = self_ask_with_search({"input": revised_question})
+            llm = OpenAI(temperature=0, model_name="text-davinci-003")
+            react = initialize_agent(tools, llm, agent="react-docstore", verbose=True)
+
+            #question = "What was the political significance of Richard III being described as both king of England and France in late 15th century England?"
+            init_reasoning = react.run(revised_question)
 
             reasoning = ""
             for i, step in enumerate(init_reasoning['intermediate_steps']):
