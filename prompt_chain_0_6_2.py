@@ -48,7 +48,7 @@ def button_one():
     ask_a_source = "Ask A Source: Pose a question about the text, and GPT-3 will share answers drawn from the text along with historical analysis."
 
 
-    search_method = st.radio("Choose a method:", (semantic_search, ask_a_paragraph, ask_a_source))
+    search_method = st.radio("Choose a method:", (semantic_search, ask_a_paragraph, ask_wiki, ask_a_source))
     section_number = st.number_input('Select a section number if you have selected Ask a Paragraph. You can find the section numbers to the bottom left, or through a semantic search.', step=1)
     submission_text = st.text_area("Enter your question below. ")
     submit_button_1 = st.button(label='Click here to submit your question.')
