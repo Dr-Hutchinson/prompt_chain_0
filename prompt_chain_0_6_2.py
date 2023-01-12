@@ -183,7 +183,7 @@ def button_one():
             llm = OpenAI(model_name="text-davinci-003", max_tokens = 500, temperature=0.0)
             chain1 = LLMChain(llm=llm, prompt=prompt_from_string_examples5)
             knowledge_check = chain1.run(submission_text+str(section))
-            st.write('1. Question Considered')
+            st.write('Step 1: Question Considered')
 
             # pass on revised quesiton for search
             lines = knowledge_check.split('\n')
@@ -211,7 +211,7 @@ def button_one():
               output = step[1]
               reasoning += f"{action.tool_input}: {output}\n"
 
-            st.write("2. Research Conducted.")
+            st.write("Step 2: Research Conducted.")
 
             # final report prompt example
 
@@ -257,7 +257,7 @@ def button_one():
             chain2 = LLMChain(llm=llm, prompt=prompt_from_string_examples6)
             final_answer = chain2.run(submission_text + "\n" + section + "\n3. Object of the Question\n" + knowledge_check + "\n6. Research Summary\n" + reasoning + "\n7. Research Summary Answer:\n" + output)
 
-            st.write('3. Analysis complete.')
+            st.write('Step 3: Analysis complete.')
             st.subheader("Here's your question:")
             st.write(submission_text)
             st.subheader("Here is the text section you seleted:")
@@ -349,7 +349,7 @@ def button_one():
             llm = OpenAI(model_name="text-davinci-003", max_tokens = 500, temperature=0.0)
             chain1 = LLMChain(llm=llm, prompt=prompt_from_string_examples5)
             knowledge_check = chain1.run(submission_text+str(section))
-            st.write('1. Question Considered')
+            st.write('Step 1: Question Considered')
 
             # pass on revised quesiton for search
             lines = knowledge_check.split('\n')
@@ -397,7 +397,7 @@ def button_one():
               output = step[1]
               reasoning += f"{action.tool_input}: {output}\n"
 
-            st.write("2. Research Conducted.")
+            st.write("Step 2: Research Conducted.")
 
             # final report prompt example
 
@@ -443,7 +443,7 @@ def button_one():
             chain2 = LLMChain(llm=llm, prompt=prompt_from_string_examples6)
             final_answer = chain2.run(submission_text + "\n" + section + "\n3. Object of the Question\n" + knowledge_check + "\n6. Research Summary\n" + reasoning + "\n7. Research Summary Answer:\n" + output)
 
-            st.write('3. Analysis complete.')
+            st.write('Step 3: Analysis complete.')
             st.subheader("Here's your question:")
             st.write(submission_text)
             st.subheader("Here is the text section you seleted:")
