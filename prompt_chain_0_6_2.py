@@ -270,6 +270,18 @@ def button_one():
             st.markdown("**GPT-3's Interpretation:**")
             st.write(output)
 
+            def self_ask_output_collection():
+                now = dt.now()
+                d1 = {'question':[submission_text], 'section':[section], 'final_answer':[final_answer], 'knowledge_check':[knowledge_check], 'reasoning':[reasoning], 'output':[output], 'date':[now]}
+                df1 = pd.DataFrame(data=d1, index=None)
+                sh1 = gc.open('aas_more_selfask_outputs')
+                wks1 = sh1[0]
+                cells1 = wks1.get_all_values(include_tailing_empty_rows=False, include_tailing_empty=False, returnas='matrix')
+                end_row1 = len(cells1)
+                wks1.set_dataframe(df1,(end_row1+1,1), copy_head=False, extend=True)
+
+            self_ask_output_collection()
+
         def self_ask_with_wikipedia():
 
             datafile_path = "./more_index_combined.csv"
