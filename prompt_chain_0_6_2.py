@@ -120,6 +120,8 @@ def button_one():
 
         def self_ask_with_search():
 
+            st.header("GPT-3's analysis is underway. It can take a minute or two for every step of the process to be completed. GPT-3's progress will be documented below.")
+
             datafile_path = "./more_index_combined.csv"
 
             df = pd.read_csv(datafile_path, encoding='latin1')
@@ -283,6 +285,8 @@ def button_one():
             self_ask_output_collection()
 
         def self_ask_with_wikipedia():
+
+            st.header("GPT-3's analysis is underway. It can take a minute or two for every step of the process to be completed. GPT-3's progress will be documented below.")
 
             datafile_path = "./more_index_combined.csv"
 
