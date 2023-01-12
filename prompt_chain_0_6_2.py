@@ -803,7 +803,7 @@ def button_one():
             embeddings_search()
         elif search_method == ask_a_paragraph:
             self_ask_with_search()
-        elif search_method == ask_wiki
+        elif search_method == ask_wiki:
             self_ask_with_wikipedia()
         else:
             ask_a_source()
