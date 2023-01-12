@@ -43,7 +43,6 @@ st.title("Ask A Source: Thomas More's 'The History of Richard III'")
 def button_one():
     st.write("This application uses GPT-3 to answer questions about Thomas More's [_History of King Richard III_](https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf). Choose one of the options below, and pose a question about the text.")
     semantic_search = "Semantic Search: Enter a question, and recieve sections of the text that are the most closely related."
-    ask_a_paragraph_context = "Ask a Paragraph: GPT-3. Select a Section from the tezt, and then pose a question. GPT-3 will interpret that section, offer an answer and historical context, and provide a supporting quote from the text."
     ask_a_paragraph = "Ask a Paragraph: Internet Search. Select a Section from the text, and then pose a question. GPT-3 will search the internet to answer your question."
     ask_wiki = "Ask a Paragraph: Wikipedia. Select a Section from the text, and then pose a question. GPT-3 will search Wikipedia to answer your question."
     ask_a_source = "Ask A Source: Pose a question about the text, and GPT-3 will share answers drawn from the text along with historical analysis."
