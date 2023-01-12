@@ -39,13 +39,6 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 os.environ["SERPAPI_API_KEY"] = st.secrets["serpapi_api_key"]
 
 st.title("Ask A Source: Thomas More's 'The History of Richard III'")
-col1, col2 = st.columns([3,3])
-with col1:
-    st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
-    datafile_path = "./more_index_combined.csv"
-    df_indexed_text = pd.read_csv(datafile_path, encoding='latin1')
-    st.dataframe(df_indexed_text, width=1250)
-
 
 def button_one():
     st.write("This application uses GPT-3 to answer questions about Thomas More's [_History of King Richard III_](https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf). Choose one of the options below, and pose a question about the text.")
@@ -704,24 +697,21 @@ def button_two():
 
 
 
-with col2:
-
-    st.write("Select the 'Ask Bacon' button to ask the AI questions. Select 'Rank Bacon' to note your impressions of its responses.")
+st.write("Select the 'Ask Bacon' button to ask the AI questions. Select 'Rank Bacon' to note your impressions of its responses.")
 
 
-    pages = {
+pages = {
         0 : button_one,
         1 : button_two,
     }
 
-    if "current" not in st.session_state:
+if "current" not in st.session_state:
+    st.session_state.current = None
 
-        st.session_state.current = None
-
-    if st.button("Ask More"):
+if st.button("Ask More"):
         st.session_state.current = 0
-    if st.button("Rank More"):
-        st.session_state.current = 1
+if st.button("Ignore This Button"):
+    st.session_state.current = 1
 
-    if st.session_state.current != None:
-        pages[st.session_state.current]()
+if st.session_state.current != None:
+    pages[st.session_state.current]()
