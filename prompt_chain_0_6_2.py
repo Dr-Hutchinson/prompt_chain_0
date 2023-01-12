@@ -191,8 +191,6 @@ def button_one():
               if line.startswith("5. Compose a Revised User Question"):
                 revised_question = lines[i+1]
 
-            begin SerpAPI section - commented out
-
             llm = OpenAI(temperature=0)
             search = SerpAPIWrapper()
             tools = [
