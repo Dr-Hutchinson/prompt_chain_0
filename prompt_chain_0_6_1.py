@@ -46,15 +46,15 @@ with col1:
     #st.write("Explore the current data.")
     #df = pd.read_csv('richardbot1_data.csv')
     #st.dataframe(df, height=500)
-    st.markdown("""
+    #st.markdown("""
     #<embed src="https://raw.githubusercontent.com/Dr-Hutchinson/prompt_chain_0/c2f3795f25683fb194e11072abb9d586964896a2/annotated_full_text.pdf" width="800" height="800">
     #""", unsafe_allow_html=True)
     #pdf_display = F'<iframe src="https://raw.githubusercontent.com/Dr-Hutchinson/prompt_chain_0/c2f3795f25683fb194e11072abb9d586964896a2/annotated_full_text.pdf" width="700" height="1000" type="application/pdf"></iframe>'
-    pdf_url = 'https://raw.githubusercontent.com/Dr-Hutchinson/prompt_chain_0/c2f3795f25683fb194e11072abb9d586964896a2/annotated_full_text.pdf'
+    #pdf_url = 'https://raw.githubusercontent.com/Dr-Hutchinson/prompt_chain_0/c2f3795f25683fb194e11072abb9d586964896a2/annotated_full_text.pdf'
     #pdf_url = 'https://github.com/Dr-Hutchinson/prompt_chain_0/blob/main/annotated_full_text.pdf'
     #pdf_url = 'https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf'
-    pdf_display = F'<iframe src="{pdf_url}" width="700" height="700" type="application/pdf"></iframe>'
-    st.markdown(pdf_display, unsafe_allow_html=True)
+    #pdf_display = F'<iframe src="{pdf_url}" width="700" height="700" type="application/pdf"></iframe>'
+    #st.markdown(pdf_display, unsafe_allow_html=True)
 
     #file_path = "./annotated_full_text.pdf"
 
@@ -78,43 +78,43 @@ with col1:
     #show_pdf('./Richard_rm.pdf')
 
 
-    file_path = './Richard-compressed.pdf'
+    #file_path = './Richard-compressed.pdf'
 
-    url_path = 'https://raw.githubusercontent.com/Dr-Hutchinson/prompt_chain_0/c2f3795f25683fb194e11072abb9d586964896a2/annotated_full_text.pdf'
+    #url_path = 'https://raw.githubusercontent.com/Dr-Hutchinson/prompt_chain_0/c2f3795f25683fb194e11072abb9d586964896a2/annotated_full_text.pdf'
 
-    with open(file_path, "rb") as f:
-        pdf_content = f.read()
-        base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
-        pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
-        st.markdown(pdf_display, unsafe_allow_html=True)
+    #with open(file_path, "rb") as f:
+        #pdf_content = f.read()
+        #base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
+        #pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
+        #st.markdown(pdf_display, unsafe_allow_html=True)
 
-    with open(file_path, "rb") as f:
-        pdf_content = f.read()
-        base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
-        pdf_url = f'data:application/pdf;base64,{base64_pdf}'
-        pdf_display = f'<iframe src="{pdf_url}" width="700" height="1000" type="application/pdf"></iframe>'
-        st.markdown(pdf_display, unsafe_allow_html=True)
+    #with open(file_path, "rb") as f:
+        #pdf_content = f.read()
+        #base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
+        #pdf_url = f'data:application/pdf;base64,{base64_pdf}'
+        #pdf_display = f'<iframe src="{pdf_url}" width="700" height="1000" type="application/pdf"></iframe>'
+        #st.markdown(pdf_display, unsafe_allow_html=True)
 
-    url = 'https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf'
+    #url = 'https://thomasmorestudies.org/wp-content/uploads/2020/09/Richard.pdf'
 
-    response = requests.get(url)
-    pdf_content = response.content
-    base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
-    pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
-    st.markdown(pdf_display, unsafe_allow_html=True)
+    #response = requests.get(url)
+    #pdf_content = response.content
+    #base64_pdf = base64.b64encode(pdf_content).decode('utf-8')
+    #pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
+    #st.markdown(pdf_display, unsafe_allow_html=True)
 
-    pdf_url = f'data:application/pdf;base64,{base64_pdf}'
-    pdf_display = f'<iframe src="{pdf_url}" width="700" height="1000" type="application/pdf"></iframe>'
-    st.markdown(pdf_display, unsafe_allow_html=True)
+    #pdf_url = f'data:application/pdf;base64,{base64_pdf}'
+    #pdf_display = f'<iframe src="{pdf_url}" width="700" height="1000" type="application/pdf"></iframe>'
+    #st.markdown(pdf_display, unsafe_allow_html=True)
 
 
-    def show_pdf(file_path):
-        with open(file_path, "rb") as f:
-            base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-        pdf_display = f'<object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="800" height="800"></object>'
-        st.markdown(pdf_display, unsafe_allow_html=True)
+    #def show_pdf(file_path):
+        #with open(file_path, "rb") as f:
+            #base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+        #pdf_display = f'<object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="800" height="800"></object>'
+        #st.markdown(pdf_display, unsafe_allow_html=True)
 
-    show_pdf('./Richard-compressed.pdf')
+    #show_pdf('./Richard-compressed.pdf')
 
     #file_path = './annotated_full_text.pdf'
 
@@ -133,7 +133,6 @@ with col1:
     datafile_path = "./more_index_combined.csv"
     df_indexed_text = pd.read_csv(datafile_path, encoding='latin1')
     st.dataframe(df_indexed_text, width=1250)
-
 
 
 
