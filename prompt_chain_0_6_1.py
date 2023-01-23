@@ -132,7 +132,7 @@ with col1:
     st.markdown("**More's text has been broken up into different sections for enable GPT-3 to access it.**")
     datafile_path = "./more_index_combined.csv"
     df_indexed_text = pd.read_csv(datafile_path, encoding='latin1')
-    st.dataframe(df_indexed_text, width=1250)
+    st.dataframe(df_indexed_text, width=3000)
 
 
 
